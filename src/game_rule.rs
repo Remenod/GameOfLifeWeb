@@ -10,12 +10,12 @@ pub struct GameRule {
 }
 
 impl GameRule {
-    pub fn new(born: HashSet<u8>, survive: HashSet<u8>) -> GameRule {
-        GameRule {
-            birth_rules: born,
-            survive_rules: survive,
-        }
-    }
+    // pub fn new(born: HashSet<u8>, survive: HashSet<u8>) -> GameRule {
+    //     GameRule {
+    //         birth_rules: born,
+    //         survive_rules: survive,
+    //     }
+    // }
 
     pub fn is_survive(&self, current: bool, neighbours_count: &u8) -> bool {
         if current {
