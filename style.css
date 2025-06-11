@@ -1,0 +1,20 @@
+#grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(10px * 100);
+}
+
+.cell {
+    width: 10px;
+    height: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+.alive {
+    background-color: black;
+}
+
+.dead {
+    background-color: white;
+}
