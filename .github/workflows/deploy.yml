@@ -24,21 +24,15 @@ jobs:
         run: cargo install wasm-pack
 
       - name: Build WASM
-        run: wasm-pack build --target web
-      
-      - name: List dist contents
-        run: ls -R .
+        run: wasm-pack build --target web --out-dir pkg --release
 
-      - name: Copy static files
+      - name: Prepare dist folder
         run: |
           mkdir -p dist
+          cp -r pkg dist/pkg
           cp index.html dist/
           cp index.js dist/
           cp style.css dist/
-          cp -r pkg dist/
-
-      - name: List dist contents 2
-        run: ls -R .
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
