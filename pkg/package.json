@@ -1,0 +1,15 @@
+{
+  "name": "game-of-life",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "game_of_life_bg.wasm",
+    "game_of_life.js",
+    "game_of_life.d.ts"
+  ],
+  "main": "game_of_life.js",
+  "types": "game_of_life.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
