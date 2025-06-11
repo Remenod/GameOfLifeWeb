@@ -1,3 +1,7 @@
+mod game_rule;
+
+use crate::game_rule::GameRule;
+use once_cell::sync::Lazy;
 use wasm_bindgen::prelude::*;
 
 const WIDTH: usize = 100;
@@ -14,6 +18,9 @@ const OFFSETS: [(isize, isize); 8] = [
     (1, 0),
     (1, 1),
 ];
+
+static GAME_RULE: Lazy<GameRule> =
+    Lazy::new(|| "B3/S23".try_into().expect("Invalid game rule format"));
 
 fn get_index(x: usize, y: usize) -> usize {
     y * WIDTH + x
@@ -35,12 +42,7 @@ fn check_next_turn(data: &Vec<bool>, index: usize) -> bool {
         .map(|(nx, ny)| data[get_index(nx, ny)] as u8)
         .sum();
 
-    match neighbours {
-        2 => data[index],
-        //0 | 1 | 4..=8 => false,
-        3 => true,
-        _ => false,
-    }
+    GAME_RULE.is_survive(data[index], &neighbours)
 }
 
 #[wasm_bindgen]
