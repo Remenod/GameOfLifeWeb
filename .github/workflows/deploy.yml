@@ -28,6 +28,7 @@ jobs:
 
       - name: Prepare dist folder
         run: |
+          rm -fr dist
           mkdir -p dist
           ls -aR dist/
           cp -r pkg dist/pkg
