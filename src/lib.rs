@@ -1,56 +1,42 @@
+mod game_of_life;
 mod game_rule;
 
-use crate::game_rule::GameRule;
-use once_cell::sync::Lazy;
+use crate::game_of_life::GameOfLife;
 use wasm_bindgen::prelude::*;
 
 const WIDTH: usize = 100;
 const HEIGHT: usize = 100;
-const VOLUME: usize = WIDTH * HEIGHT;
 
-const OFFSETS: [(isize, isize); 8] = [
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-    (0, -1),
-    (0, 1),
-    (1, -1),
-    (1, 0),
-    (1, 1),
-];
-
-static GAME_RULE: Lazy<GameRule> =
-    Lazy::new(|| "B3/S23".try_into().expect("Invalid game rule format"));
-
-fn get_index(x: usize, y: usize) -> usize {
-    y * WIDTH + x
-}
-
-fn get_x_y(index: usize) -> (usize, usize) {
-    let y = index / WIDTH;
-    let x = index % WIDTH;
-    (x, y)
-}
-
-fn check_next_turn(data: &Vec<bool>, index: usize) -> bool {
-    let (x, y) = get_x_y(index);
-
-    let neighbours: u8 = OFFSETS
-        .iter()
-        .map(|(dx, dy)| (x.wrapping_add_signed(*dx), y.wrapping_add_signed(*dy)))
-        .filter(|(nx, ny)| *nx < WIDTH && *ny < HEIGHT)
-        .map(|(nx, ny)| data[get_index(nx, ny)] as u8)
-        .sum();
-
-    GAME_RULE.is_survive(data[index], &neighbours)
+#[wasm_bindgen]
+pub struct WasmGame {
+    inner: GameOfLife,
 }
 
 #[wasm_bindgen]
-pub fn main() {
-    let mut curr_field = vec![false; VOLUME.into()];
-    let mut prev_field = curr_field.clone();
+impl WasmGame {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> WasmGame {
+        WasmGame {
+            inner: GameOfLife::new(
+                WIDTH,
+                HEIGHT,
+                vec![false; WIDTH * HEIGHT],
+                "B3/S23".try_into().unwrap(),
+            ),
+        }
+    }
 
-    for i in 0..VOLUME {
-        curr_field[i] = check_next_turn(&prev_field, i);
+    pub fn tick(&mut self) {
+        self.inner.next_turn();
+    }
+
+    pub fn get_cell(&self, x: usize, y: usize) -> bool {
+        self.inner.get_cell(x, y)
+    }
+
+    pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
+        self.inner.set_cell(x, y, value);
     }
 }
+
+//#[wasm_bindgen]
