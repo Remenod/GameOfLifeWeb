@@ -1,20 +1,19 @@
-#grid {
-    display: flex;
-    flex-wrap: wrap;
-    width: calc(10px * 100);
+body {
+    font-family: Arial, sans-serif;
+    margin: 16px;
 }
 
-.cell {
-    width: 10px;
-    height: 10px;
-    box-sizing: border-box;
+canvas {
     border: 1px solid #ccc;
+    display: block;
+    margin-top: 16px;
 }
 
-.alive {
-    background-color: black;
+label {
+    margin-right: 8px;
 }
 
-.dead {
-    background-color: white;
+input,
+button {
+    margin: 4px;
 }
