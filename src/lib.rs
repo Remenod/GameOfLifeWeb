@@ -4,9 +4,6 @@ mod game_rule;
 use crate::game_of_life::GameOfLife;
 use wasm_bindgen::prelude::*;
 
-const WIDTH: usize = 100;
-const HEIGHT: usize = 100;
-
 #[wasm_bindgen]
 pub struct WasmGame {
     inner: GameOfLife,
@@ -15,13 +12,13 @@ pub struct WasmGame {
 #[wasm_bindgen]
 impl WasmGame {
     #[wasm_bindgen(constructor)]
-    pub fn new() -> WasmGame {
+    pub fn new(width: usize, height: usize, field: Vec<u8>, rule: &str) -> WasmGame {
         WasmGame {
             inner: GameOfLife::new(
-                WIDTH,
-                HEIGHT,
-                vec![false; WIDTH * HEIGHT],
-                "B3/S23".try_into().unwrap(),
+                width,
+                height,
+                field.into_iter().map(|b| b != 0).collect(),
+                rule.try_into().unwrap(),
             ),
         }
     }
@@ -37,6 +34,12 @@ impl WasmGame {
     pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
         self.inner.set_cell(x, y, value);
     }
-}
 
-//#[wasm_bindgen]
+    pub fn export_field(&self) -> String {
+        self.inner
+            .get_field()
+            .iter()
+            .map(|&b| if b { '1' } else { '0' })
+            .collect()
+    }
+}
