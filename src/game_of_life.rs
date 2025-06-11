@@ -81,4 +81,8 @@ impl GameOfLife {
 
         self.current_field[index] = value;
     }
+
+    pub fn get_field(&self) -> &Vec<bool> {
+        &self.current_field
+    }
 }
