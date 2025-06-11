@@ -1,12 +1,16 @@
 import init, { WasmGame } from "./pkg/game_of_life.js";
 
 let game;
-let canvas;
-let ctx;
 let playing = false;
 let intervalId = null;
 const cellSize = 10;
 let width, height;
+
+let canvas = document.getElementById("canvas");;
+let ctx = canvas.getContext("2d");
+const previewCanvas = document.getElementById("previewCanvas");
+const previewCtx = previewCanvas.getContext("2d");
+const previewCellSize = 5;
 
 window.tick = tick;
 window.copyField = copyField;
@@ -79,6 +83,25 @@ function drawGridLines() {
     }
 }
 
+function drawPreviewField(text, width, height) {
+    previewCanvas.width = width * previewCellSize;
+    previewCanvas.height = height * previewCellSize;
+
+    previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const idx = y * width + x;
+            const ch = idx < text.length ? text[idx] : '0';
+            previewCtx.fillStyle = ch === '1' ? "black" : "white";
+            previewCtx.fillRect(x * previewCellSize, y * previewCellSize, previewCellSize, previewCellSize);
+            previewCtx.strokeStyle = "#ccc";
+            previewCtx.strokeRect(x * previewCellSize, y * previewCellSize, previewCellSize, previewCellSize);
+        }
+    }
+
+}
+
 function tick() {
     game.tick();
     drawGrid();
@@ -107,9 +130,6 @@ function toggleCellAtEvent(event) {
 
 async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
     await init();
-
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
 
     width = parseInt(widthInput);
     height = parseInt(heightInput);
@@ -153,6 +173,18 @@ async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
     drawGrid();
 }
 
+function updatePreview() {
+    const text = document.getElementById("fieldInput").value.trim();
+    const w = parseInt(document.getElementById("widthInput").value, 10);
+    const h = parseInt(document.getElementById("heightInput").value, 10);
+    drawPreviewField(text, w, h);
+}
+
+updatePreview();
+
+document.getElementById("fieldInput").addEventListener("input", updatePreview);
+document.getElementById("widthInput").addEventListener("input", updatePreview);
+document.getElementById("heightInput").addEventListener("input", updatePreview);
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
