@@ -8,6 +8,27 @@
 </head>
 
 <body>
+    <form id="settingsForm">
+        <label>
+            Width: <input type="number" id="widthInput" value="100" min="1" max="1000" required>
+        </label>
+        <label>
+            Height: <input type="number" id="heightInput" value="100" min="1" max="1000" required>
+        </label>
+        <label>
+            Rule: <input type="text" id="ruleInput" value="B3/S23" required>
+        </label>
+        <label>
+            <br>Field (0/1 string, optional):<br>
+            <textarea id="fieldInput" placeholder="Leave blank for empty field" rows="5" cols="50"
+                style="font-family: monospace;"></textarea>
+        </label>
+        <div>
+            <button type="submit">Start Game</button>
+        </div>
+    </form>
+
+
     <canvas id="canvas"></canvas>
 
     <input type="number" id="tps" value="5" min="1" style="width: 60px;" />
