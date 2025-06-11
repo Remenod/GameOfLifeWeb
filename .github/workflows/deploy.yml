@@ -24,7 +24,10 @@ jobs:
         run: cargo install wasm-pack
 
       - name: Build WASM
-        run: wasm-pack build --target web --out-dir ./dist/pkg
+        run: wasm-pack build --target web --out-dir ./dist
+      
+      - name: List dist contents
+        run: ls -R dist
 
       - name: Copy static files
         run: |
