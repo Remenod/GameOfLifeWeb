@@ -1,14 +1,30 @@
 import init, { WasmGame } from "./pkg/game_of_life.js";
 
 let game;
-const grid = document.getElementById("grid");
+let canvas;
+let ctx;
+let playing = false;
+let intervalId = null;
+const cellSize = 10;
+let width, height;
 
 window.tick = tick;
 window.copyField = copyField;
 window.togglePlay = togglePlay;
+window.clearGrid = clearGrid;
 
-let playing = false;
-let intervalId = null;
+let isDragging = false;
+let toggledCells = new Set();
+
+function clearGrid() {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            game.set_cell(x, y, false);
+        }
+    }
+    console.log("clear");
+    drawGrid();
+}
 
 function togglePlay() {
     const btn = document.getElementById("playPauseBtn");
@@ -20,47 +36,43 @@ function togglePlay() {
             return;
         }
 
-        intervalId = setInterval(() => {
-            tick();
-        }, 1000 / tps);
+        intervalId = setInterval(tick, 1000 / tps);
 
-        btn.textContent = "⏸";
+        btn.textContent = "Pause";
         playing = true;
     } else {
         clearInterval(intervalId);
-        btn.textContent = "⏵";
+        btn.textContent = "Play";
         playing = false;
     }
 }
 
-function createGrid(width, height) {
-    grid.innerHTML = "";
-    grid.style.width = `${width * 10}px`;
+function drawGrid() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let y = 0; y < height; y++) {
-        const row = document.createElement("div");
         for (let x = 0; x < width; x++) {
-            const cell = document.createElement("div");
-            cell.classList.add("cell", "dead");
-            cell.dataset.x = x;
-            cell.dataset.y = y;
-            cell.addEventListener("click", () => {
-                const alive = game.get_cell(x, y);
-                game.set_cell(x, y, !alive);
-                drawGrid();
-            });
-            row.appendChild(cell);
+            const alive = game.get_cell(x, y);
+            ctx.fillStyle = alive ? "black" : "white";
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
-        grid.appendChild(row);
     }
+    drawGridLines();
 }
 
-function drawGrid() {
-    for (let cell of grid.querySelectorAll(".cell")) {
-        const x = parseInt(cell.dataset.x);
-        const y = parseInt(cell.dataset.y);
-        const alive = game.get_cell(x, y);
-        cell.classList.toggle("alive", alive);
-        cell.classList.toggle("dead", !alive);
+function drawGridLines() {
+    ctx.strokeStyle = "#ddd";
+    ctx.lineWidth = 1;
+    for (let x = 0; x <= width; x++) {
+        ctx.beginPath();
+        ctx.moveTo(x * cellSize + 0.5, 0);
+        ctx.lineTo(x * cellSize + 0.5, height * cellSize);
+        ctx.stroke();
+    }
+    for (let y = 0; y <= height; y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, y * cellSize + 0.5);
+        ctx.lineTo(width * cellSize, y * cellSize + 0.5);
+        ctx.stroke();
     }
 }
 
@@ -70,18 +82,34 @@ function tick() {
 }
 
 function copyField() {
-    let result = game.export_field()
+    let result = game.export_field();
 
     navigator.clipboard.writeText(result)
         .then(() => alert("The field is copied to the clipboard."))
         .catch(err => console.error("A copying error:", err));
 }
 
+function toggleCellAtEvent(event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.floor((event.clientX - rect.left) / cellSize);
+    const y = Math.floor((event.clientY - rect.top) / cellSize);
+    const key = `${x},${y}`;
+    if (x >= 0 && x < width && y >= 0 && y < height && !toggledCells.has(key)) {
+        const alive = game.get_cell(x, y);
+        game.set_cell(x, y, !alive);
+        toggledCells.add(key);
+        drawGrid();
+    }
+}
+
 async function run() {
     await init();
 
-    let width = parseInt(prompt("Enter width:", "100"));
-    let height = parseInt(prompt("Enter height", "100"));
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+
+    width = parseInt(prompt("Enter width:", "100"));
+    height = parseInt(prompt("Enter height", "100"));
     let rule = prompt("Enter a rule (e.g., B3/S23):", "B3/S23");
 
     const input = prompt(`Enter a field of ${width * height} characters (0 or 1) without spaces or leave it blank:`, "");
@@ -95,7 +123,31 @@ async function run() {
 
     game = new WasmGame(width, height, field, rule);
 
-    createGrid(width, height);
+    canvas.width = width * cellSize;
+    canvas.height = height * cellSize;
+
+    canvas.addEventListener("mousedown", (event) => {
+        isDragging = true;
+        toggledCells.clear();
+        toggleCellAtEvent(event);
+    });
+
+    canvas.addEventListener("mousemove", (event) => {
+        if (isDragging) {
+            toggleCellAtEvent(event);
+        }
+    });
+
+    canvas.addEventListener("mouseup", () => {
+        isDragging = false;
+        toggledCells.clear();
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+        isDragging = false;
+        toggledCells.clear();
+    });
+
     drawGrid();
 }
 
