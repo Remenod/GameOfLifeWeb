@@ -31,9 +31,11 @@ jobs:
 
       - name: Copy static files
         run: |
+          mkdir -p dist
           cp index.html dist/
           cp index.js dist/
           cp style.css dist/
+          cp -r pkg dist/
 
       - name: List dist contents 2
         run: ls -R .
