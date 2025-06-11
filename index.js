@@ -24,11 +24,11 @@ function togglePlay() {
             tick();
         }, 1000 / tps);
 
-        btn.textContent = "Pause";
+        btn.textContent = "⏸";
         playing = true;
     } else {
         clearInterval(intervalId);
-        btn.textContent = "Play";
+        btn.textContent = "⏵";
         playing = false;
     }
 }
