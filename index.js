@@ -8,6 +8,7 @@ let width, height;
 
 let canvas = document.getElementById("canvas");;
 let ctx = canvas.getContext("2d");
+
 const previewCanvas = document.getElementById("previewCanvas");
 const previewCtx = previewCanvas.getContext("2d");
 const previewCellSize = 5;
@@ -20,6 +21,7 @@ window.clearGrid = clearGrid;
 let isDragging = false;
 let toggledCells = new Set();
 
+loadFromUrlParams();
 
 await init().then(() => {
     updatePreview();
@@ -194,11 +196,48 @@ function updatePreview() {
 
     const text = parseField(document.getElementById("fieldInput").value, w);
     drawPreviewField(text, w, h);
+
+    updateUrlParams();
+}
+
+function updateUrlParams() {
+    const width = document.getElementById("widthInput").value;
+    const height = document.getElementById("heightInput").value;
+    const rule = document.getElementById("ruleInput").value;
+    const field = document.getElementById("fieldInput").value;
+
+    const params = new URLSearchParams();
+
+    if (width) params.set("w", width);
+    if (height) params.set("h", height);
+    if (rule) params.set("r", rule);
+    if (field) params.set("f", field);
+
+    const newUrl = `${location.pathname}?${params.toString()}`;
+    history.replaceState(null, "", newUrl);
+}
+
+function loadFromUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+
+    const width = params.get("w");
+    const height = params.get("h");
+    const rule = params.get("r");
+
+    const rawField = params.get("f");
+    const field = rawField !== null ? decodeURIComponent(rawField) : "";
+
+    if (width) document.getElementById("widthInput").value = width;
+    if (height) document.getElementById("heightInput").value = height;
+    if (rule) document.getElementById("ruleInput").value = rule;
+    if (field) document.getElementById("fieldInput").value = field;
 }
 
 document.getElementById("fieldInput").addEventListener("input", updatePreview);
 document.getElementById("widthInput").addEventListener("input", updatePreview);
 document.getElementById("heightInput").addEventListener("input", updatePreview);
+
+document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
 
 document.getElementById("tps").addEventListener("input", () => {
     if (playing) {
