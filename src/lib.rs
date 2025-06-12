@@ -42,87 +42,127 @@ impl WasmGame {
             .map(|&b| if b { '1' } else { '0' })
             .collect()
     }
+}
 
-    pub fn encode_field(decoded: &str) -> String {
-        let mut chars = decoded.chars();
-        let mut current_char = chars.next().unwrap();
-        let mut count: u32 = 1;
-        let mut result = current_char.to_string();
+#[wasm_bindgen]
+pub fn encode_field(decoded: &str) -> String {
+    let mut chars = decoded.chars();
+    let mut current_char = chars.next().unwrap();
+    let mut count: u32 = 1;
+    let mut result = current_char.to_string();
 
-        for c in chars {
-            if c == current_char {
-                count += 1;
-            } else {
-                if count > 9 {
-                    result.push('[');
-                    result.push_str(&count.to_string());
-                    result.push(']');
-                } else {
-                    result.push_str(&count.to_string());
-                }
-                current_char = c;
-                count = 1;
-            }
-        }
-
-        if count > 9 {
-            result.push('[');
-            result.push_str(&count.to_string());
-            result.push(']');
+    for c in chars {
+        if c == current_char {
+            count += 1;
         } else {
-            result.push_str(&count.to_string());
-        }
-        result
-    }
-
-    pub fn decode_field(encoded: &str) -> String {
-        let mut chars = encoded.chars().peekable();
-        let mut current_char = chars.next().unwrap_or('0');
-        let mut s = String::new();
-
-        while let Some(&c) = chars.peek() {
-            let count = if c == '[' {
-                chars.next();
-                let mut number = String::new();
-                while let Some(&digit) = chars.peek() {
-                    if digit == ']' {
-                        chars.next();
-                        break;
-                    }
-                    number.push(digit);
-                    chars.next();
-                }
-                number.parse::<usize>().unwrap_or(0)
+            if count > 9 {
+                result.push('[');
+                result.push_str(&count.to_string());
+                result.push(']');
             } else {
-                chars.next();
-                c.to_digit(10).unwrap_or(0) as usize
-            };
-
-            s.extend(std::iter::repeat(current_char).take(count));
-            current_char = if current_char == '0' { '1' } else { '0' };
-        }
-
-        s
-    }
-
-    pub fn adapt_field_width(matrix_str: &str, old_width: usize, new_width: usize) -> String {
-        let old_height = matrix_str.len() / old_width;
-        let mut result = String::with_capacity(old_height * new_width);
-
-        for row in 0..old_height {
-            let start = row * old_width;
-            let end = start + old_width;
-            let row_data = &matrix_str[start..end];
-
-            if new_width > old_width {
-                result.push_str(row_data);
-                result.push_str(&"0".repeat(new_width - old_width));
-            } else {
-                result.push_str(&row_data[..new_width]);
+                result.push_str(&count.to_string());
             }
+            current_char = c;
+            count = 1;
         }
+    }
 
-        result
+    if count > 9 {
+        result.push('[');
+        result.push_str(&count.to_string());
+        result.push(']');
+    } else {
+        result.push_str(&count.to_string());
+    }
+    result
+}
+
+#[wasm_bindgen]
+pub fn decode_field(encoded: &str) -> String {
+    let mut chars = encoded.chars().peekable();
+    let mut current_char = chars.next().unwrap_or('0');
+    let mut s = String::new();
+
+    while let Some(&c) = chars.peek() {
+        let count = if c == '[' {
+            chars.next();
+            let mut number = String::new();
+            while let Some(&digit) = chars.peek() {
+                if digit == ']' {
+                    chars.next();
+                    break;
+                }
+                number.push(digit);
+                chars.next();
+            }
+            number.parse::<usize>().unwrap_or(0)
+        } else {
+            chars.next();
+            c.to_digit(10).unwrap_or(0) as usize
+        };
+
+        s.extend(std::iter::repeat(current_char).take(count));
+        current_char = if current_char == '0' { '1' } else { '0' };
+    }
+
+    s
+}
+
+#[wasm_bindgen]
+pub fn adapt_field_width(matrix_str: &str, old_width: usize, new_width: usize) -> String {
+    let old_height = matrix_str.len() / old_width;
+    let mut result = String::with_capacity(old_height * new_width);
+
+    for row in 0..old_height {
+        let start = row * old_width;
+        let end = start + old_width;
+        let row_data = &matrix_str[start..end];
+
+        if new_width > old_width {
+            result.push_str(row_data);
+            result.push_str(&"0".repeat(new_width - old_width));
+        } else {
+            result.push_str(&row_data[..new_width]);
+        }
+    }
+
+    result
+}
+
+#[wasm_bindgen]
+pub fn parse_field(input: &str, current_width: usize) -> String {
+    let input = input.trim();
+
+    let header_owned;
+
+    let (header, data) = if let Some(index) = input.find(';') {
+        let (h, d) = input.split_at(index);
+        (h, &d[1..]) // пропускаємо ';'
+    } else {
+        header_owned = format!("v1w{}", current_width);
+        (header_owned.as_str(), input)
+    };
+
+    let re = regex::Regex::new(r"^v([12])w(\d+)$").unwrap();
+    let (version, width) = if let Some(caps) = re.captures(header) {
+        (
+            caps[1].parse::<u8>().unwrap_or(1),
+            caps[2].parse::<usize>().unwrap_or(current_width),
+        )
+    } else {
+        (1, current_width)
+    };
+
+    let decoded = if version == 2 {
+        decode_field(data)
+    } else {
+        data.to_string()
+    };
+
+    if current_width == width {
+        decoded
+    } else {
+        adapt_field_width(&decoded, width, current_width)
     }
 }
 
