@@ -82,15 +82,16 @@ function passStringToWasm0(arg, malloc, realloc) {
 }
 /**
  * @param {string} decoded
+ * @param {boolean} v3mode
  * @returns {string}
  */
-export function encode_field(decoded) {
+export function encode_field(decoded, v3mode) {
     let deferred2_0;
     let deferred2_1;
     try {
         const ptr0 = passStringToWasm0(decoded, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.encode_field(ptr0, len0);
+        const ret = wasm.encode_field(ptr0, len0, v3mode);
         deferred2_0 = ret[0];
         deferred2_1 = ret[1];
         return getStringFromWasm0(ret[0], ret[1]);
@@ -101,15 +102,16 @@ export function encode_field(decoded) {
 
 /**
  * @param {string} encoded
+ * @param {boolean} v3mode
  * @returns {string}
  */
-export function decode_field(encoded) {
+export function decode_field(encoded, v3mode) {
     let deferred2_0;
     let deferred2_1;
     try {
         const ptr0 = passStringToWasm0(encoded, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.decode_field(ptr0, len0);
+        const ret = wasm.decode_field(ptr0, len0, v3mode);
         deferred2_0 = ret[0];
         deferred2_1 = ret[1];
         return getStringFromWasm0(ret[0], ret[1]);

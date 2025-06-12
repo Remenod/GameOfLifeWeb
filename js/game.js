@@ -44,13 +44,49 @@ export function togglePlay() {
     }
 }
 
-export function copyField() {
-    let result = "v2w" + width + ";" + encode_field(game.export_field());
+function copyField(version, encoder = null) {
+    if (!game) return;
+
+    let rawField = game.export_field();
+    let field = encoder ? encoder(rawField) : rawField;
+    let result = `${version}w${width};${field}`;
 
     navigator.clipboard.writeText(result)
-        .then(() => alert("The field is copied to the clipboard."))
+        .then(() => showToast(`The ${version} template is copied to the clipboard.`))
         .catch(err => console.error("A copying error:", err));
 }
+
+export function copyFieldV1() {
+    copyField("v1");
+}
+
+export function copyFieldV2() {
+    copyField("v2", f => encode_field(f, false));
+}
+
+export function copyFieldV3() {
+    copyField("v3", f => encode_field(f, true));
+}
+
+
+function showToast(message, duration = 1500) {
+    const toast = document.createElement("div");
+    toast.className = "toast-message";
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.classList.add("show");
+    });
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+
 
 export function tick() {
     game.tick();

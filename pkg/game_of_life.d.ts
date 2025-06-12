@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-export function encode_field(decoded: string): string;
-export function decode_field(encoded: string): string;
+export function encode_field(decoded: string, v3mode: boolean): string;
+export function decode_field(encoded: string, v3mode: boolean): string;
 export function adapt_field_width(matrix_str: string, old_width: number, new_width: number): string;
 export function parse_field(input: string, current_width: number): string;
 export class WasmGame {
@@ -23,8 +23,8 @@ export interface InitOutput {
   readonly wasmgame_get_cell: (a: number, b: number, c: number) => number;
   readonly wasmgame_set_cell: (a: number, b: number, c: number, d: number) => void;
   readonly wasmgame_export_field: (a: number) => [number, number];
-  readonly encode_field: (a: number, b: number) => [number, number];
-  readonly decode_field: (a: number, b: number) => [number, number];
+  readonly encode_field: (a: number, b: number, c: number) => [number, number];
+  readonly decode_field: (a: number, b: number, c: number) => [number, number];
   readonly adapt_field_width: (a: number, b: number, c: number, d: number) => [number, number];
   readonly parse_field: (a: number, b: number, c: number) => [number, number];
   readonly __wbindgen_export_0: WebAssembly.Table;
