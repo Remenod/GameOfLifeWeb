@@ -53,7 +53,15 @@ export function copyFieldV1() {
 }
 
 export function copyFieldV2() {
-    let result = "v2w" + width + ";" + encode_field(game.export_field());
+    let result = "v2w" + width + ";" + encode_field(game.export_field(), false);
+
+    navigator.clipboard.writeText(result)
+        .then(() => alert("The field is copied to the clipboard."))
+        .catch(err => console.error("A copying error:", err));
+}
+
+export function copyFieldV3() {
+    let result = "v3w" + width + ";" + encode_field(game.export_field(), true);
 
     navigator.clipboard.writeText(result)
         .then(() => alert("The field is copied to the clipboard."))

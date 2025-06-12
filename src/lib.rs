@@ -44,8 +44,36 @@ impl WasmGame {
     }
 }
 
+fn to_radix62(mut num: u32) -> String {
+    const CHARS: &[u8] = b"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if num == 0 {
+        return "0".to_string();
+    }
+    let mut res = Vec::new();
+    while num > 0 {
+        res.push(CHARS[(num % 62) as usize]);
+        num /= 62;
+    }
+    res.reverse();
+    String::from_utf8(res).unwrap()
+}
+
+fn from_radix62(s: &str) -> Option<u32> {
+    let mut result: u32 = 0;
+    for c in s.chars() {
+        let digit = match c {
+            '0'..='9' => c as u32 - '0' as u32,
+            'a'..='z' => c as u32 - 'a' as u32 + 10,
+            'A'..='Z' => c as u32 - 'A' as u32 + 36,
+            _ => return None,
+        };
+        result = result.checked_mul(62)?.checked_add(digit)?;
+    }
+    Some(result)
+}
+
 #[wasm_bindgen]
-pub fn encode_field(decoded: &str) -> String {
+pub fn encode_field(decoded: &str, v3mode: bool) -> String {
     let mut chars = decoded.chars();
     let mut current_char = chars.next().unwrap();
     let mut count: u32 = 1;
@@ -55,30 +83,50 @@ pub fn encode_field(decoded: &str) -> String {
         if c == current_char {
             count += 1;
         } else {
-            if count > 9 {
+            if count > (if v3mode { 61 } else { 9 }) {
                 result.push('[');
-                result.push_str(&count.to_string());
+                let val = if v3mode {
+                    &to_radix62(count)
+                } else {
+                    &count.to_string()
+                };
+                result.push_str(val);
                 result.push(']');
             } else {
-                result.push_str(&count.to_string());
+                let val = if v3mode {
+                    &to_radix62(count)
+                } else {
+                    &count.to_string()
+                };
+                result.push_str(val);
             }
             current_char = c;
             count = 1;
         }
     }
 
-    if count > 9 {
+    if count > (if v3mode { 61 } else { 9 }) {
         result.push('[');
-        result.push_str(&count.to_string());
+        let val = if v3mode {
+            &to_radix62(count)
+        } else {
+            &count.to_string()
+        };
+        result.push_str(val);
         result.push(']');
     } else {
-        result.push_str(&count.to_string());
+        let val = if v3mode {
+            &to_radix62(count)
+        } else {
+            &count.to_string()
+        };
+        result.push_str(val);
     }
     result
 }
 
 #[wasm_bindgen]
-pub fn decode_field(encoded: &str) -> String {
+pub fn decode_field(encoded: &str, v3mode: bool) -> String {
     let mut chars = encoded.chars().peekable();
     let mut current_char = chars.next().unwrap_or('0');
     let mut s = String::new();
@@ -95,13 +143,21 @@ pub fn decode_field(encoded: &str) -> String {
                 number.push(digit);
                 chars.next();
             }
-            number.parse::<usize>().unwrap_or(0)
+            if v3mode {
+                from_radix62(&number).unwrap_or(0)
+            } else {
+                number.parse::<u32>().unwrap_or(0)
+            }
         } else {
             chars.next();
-            c.to_digit(10).unwrap_or(0) as usize
+            if v3mode {
+                from_radix62(&c.to_string()).unwrap_or(0)
+            } else {
+                c.to_digit(10).unwrap_or(0)
+            }
         };
 
-        s.extend(std::iter::repeat(current_char).take(count));
+        s.extend(std::iter::repeat(current_char).take(count as usize));
         current_char = if current_char == '0' { '1' } else { '0' };
     }
 
@@ -137,13 +193,13 @@ pub fn parse_field(input: &str, current_width: usize) -> String {
 
     let (header, data) = if let Some(index) = input.find(';') {
         let (h, d) = input.split_at(index);
-        (h, &d[1..]) // пропускаємо ';'
+        (h, &d[1..]) // skip ';'
     } else {
         header_owned = format!("v1w{}", current_width);
         (header_owned.as_str(), input)
     };
 
-    let re = regex::Regex::new(r"^v([12])w(\d+)$").unwrap();
+    let re = regex::Regex::new(r"^v([123])w(\d+)$").unwrap();
     let (version, width) = if let Some(caps) = re.captures(header) {
         (
             caps[1].parse::<u8>().unwrap_or(1),
@@ -153,8 +209,8 @@ pub fn parse_field(input: &str, current_width: usize) -> String {
         (1, current_width)
     };
 
-    let decoded = if version == 2 {
-        decode_field(data)
+    let decoded = if version != 1 {
+        decode_field(data, version == 3)
     } else {
         data.to_string()
     };
@@ -178,8 +234,8 @@ mod tests {
             let bools: Vec<bool> = (0..30000).map(|_| rng.gen_bool(0.5)).collect();
 
             let original: String = bools.iter().map(|&b| if b { '1' } else { '0' }).collect();
-            let encoded = WasmGame::encode_field(&original);
-            let decoded = WasmGame::decode_field(&encoded);
+            let encoded = encode_field(&original);
+            let decoded = decode_field(&encoded);
 
             assert_eq!(decoded, original);
         }
@@ -189,11 +245,11 @@ mod tests {
     fn test_field_adapter() {
         assert_eq!(
             "11100111001110000000",
-            WasmGame::adapt_field_width("111111111000", 3, 5)
+            adapt_field_width("111111111000", 3, 5)
         );
         assert_eq!(
             "111111111000",
-            WasmGame::adapt_field_width("11101111001110000000", 5, 3)
+            adapt_field_width("11101111001110000000", 5, 3)
         );
     }
 }
