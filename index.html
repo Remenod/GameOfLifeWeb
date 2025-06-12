@@ -20,7 +20,10 @@
                 Rule: <input type="text" id="ruleInput" value="B3/S23" required>
             </label>
             <label>
-                <br>Field (0/1 string, optional):<br>
+                <button type="button" onclick="copyUrl()">Copy Link</button>
+            </label>
+            <label>
+                <br>Field template(optional):<br>
                 <textarea id="fieldInput" placeholder="Leave blank for empty field" rows="10" cols="50"
                     style="font-family: monospace;"></textarea>
             </label>
@@ -38,11 +41,11 @@
 
     <canvas id="canvas"></canvas>
 
-    <input type="number" id="tps" value="5" min="1" style="width: 60px;" />
+    <input type="number" id="tps" value="20" min="1" style="width: 60px;" />
     <button id="playPauseBtn" onclick="togglePlay()">Play</button>
 
     <button onclick="tick()">Next</button>
-    <button onclick="copyField()">Copy field data</button>
+    <button onclick="copyField()">Copy field template</button>
     <button onclick="clearGrid()">Clear</button>
 
     <script type="module" src="index.js"></script>
