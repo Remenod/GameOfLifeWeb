@@ -44,7 +44,15 @@ export function togglePlay() {
     }
 }
 
-export function copyField() {
+export function copyFieldV1() {
+    let result = "v1w" + width + ";" + game.export_field();
+
+    navigator.clipboard.writeText(result)
+        .then(() => alert("The field is copied to the clipboard."))
+        .catch(err => console.error("A copying error:", err));
+}
+
+export function copyFieldV2() {
     let result = "v2w" + width + ";" + encode_field(game.export_field());
 
     navigator.clipboard.writeText(result)
