@@ -30,14 +30,12 @@ jobs:
         run: |
           rm -fr dist
           mkdir -p dist
-          ls -aR dist/
           cp -r pkg dist/pkg
           cp index.html dist/
-          cp index.js dist/
+          cp -r js dist/js
           cp style.css dist/
-          ls -aR dist/
+          cp favicon.ico dist/
           rm dist/pkg/.gitignore 
-          ls -aR dist/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
