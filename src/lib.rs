@@ -104,18 +104,38 @@ impl WasmGame {
 
         s
     }
+
+    pub fn adapt_field_width(matrix_str: &str, old_width: usize, new_width: usize) -> String {
+        let old_height = matrix_str.len() / old_width;
+        let mut result = String::with_capacity(old_height * new_width);
+
+        for row in 0..old_height {
+            let start = row * old_width;
+            let end = start + old_width;
+            let row_data = &matrix_str[start..end];
+
+            if new_width > old_width {
+                result.push_str(row_data);
+                result.push_str(&"0".repeat(new_width - old_width));
+            } else {
+                result.push_str(&row_data[..new_width]);
+            }
+        }
+
+        result
+    }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32"), feature = "native"))]
 mod tests {
     use super::*;
     use rand::Rng;
 
     #[test]
     fn test_random_round_trip() {
-        let mut rng = rand::rngs::ThreadRng::default();
+        let mut rng = rand::thread_rng();
         for _ in 0..3000 {
-            let bools: Vec<bool> = (0..30000).map(|_| rng.random_bool(0.5)).collect();
+            let bools: Vec<bool> = (0..30000).map(|_| rng.gen_bool(0.5)).collect();
 
             let original: String = bools.iter().map(|&b| if b { '1' } else { '0' }).collect();
             let encoded = WasmGame::encode_field(&original);
@@ -123,5 +143,17 @@ mod tests {
 
             assert_eq!(decoded, original);
         }
+    }
+
+    #[test]
+    fn test_field_adapter() {
+        assert_eq!(
+            "11100111001110000000",
+            WasmGame::adapt_field_width("111111111000", 3, 5)
+        );
+        assert_eq!(
+            "111111111000",
+            WasmGame::adapt_field_width("11101111001110000000", 5, 3)
+        );
     }
 }

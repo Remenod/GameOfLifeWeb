@@ -20,6 +20,11 @@ window.clearGrid = clearGrid;
 let isDragging = false;
 let toggledCells = new Set();
 
+
+await init().then(() => {
+    updatePreview();
+});
+
 function clearGrid() {
     if (playing) {
         togglePlay();
@@ -108,7 +113,7 @@ function tick() {
 }
 
 function copyField() {
-    let result = game.export_field();
+    let result = width + "w" + WasmGame.encode_field(game.export_field());
 
     navigator.clipboard.writeText(result)
         .then(() => alert("The field is copied to the clipboard."))
@@ -129,13 +134,13 @@ function toggleCellAtEvent(event) {
 }
 
 async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
-    await init();
-
     width = parseInt(widthInput);
     height = parseInt(heightInput);
     const rule = ruleInput.trim();
 
-    const cleaned = fieldInput.trim();
+    const [expectedWidth, encodedField] = fieldInput.trim().split("w");
+    const decoded = WasmGame.decode_field(encodedField);
+    const cleaned = width == expectedWidth ? decoded : WasmGame.adapt_field_width(decoded, expectedWidth, width);
 
     let field = new Uint8Array(width * height);
     for (let i = 0; i < field.length; i++) {
@@ -174,13 +179,20 @@ async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
 }
 
 function updatePreview() {
-    const text = document.getElementById("fieldInput").value.trim();
+
     const w = parseInt(document.getElementById("widthInput").value, 10);
     const h = parseInt(document.getElementById("heightInput").value, 10);
-    drawPreviewField(text, w, h);
-}
 
-updatePreview();
+    const input = document.getElementById("fieldInput").value.trim();
+    const text = input === "" ? "100w01" : input;
+
+
+    const [expectedWidth, encodedField] = text.trim().split("w");
+    const decoded = WasmGame.decode_field(encodedField);
+    const cleaned = w == expectedWidth ? decoded : WasmGame.adapt_field_width(decoded, expectedWidth, w);
+
+    drawPreviewField(cleaned, w, h);
+}
 
 document.getElementById("fieldInput").addEventListener("input", updatePreview);
 document.getElementById("widthInput").addEventListener("input", updatePreview);
