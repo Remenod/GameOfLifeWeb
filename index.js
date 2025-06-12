@@ -20,6 +20,11 @@ window.clearGrid = clearGrid;
 let isDragging = false;
 let toggledCells = new Set();
 
+
+await init().then(() => {
+    updatePreview();
+});
+
 function clearGrid() {
     if (playing) {
         togglePlay();
@@ -39,7 +44,6 @@ function togglePlay() {
     if (!playing) {
         const tps = parseInt(document.getElementById("tps").value, 10);
         if (isNaN(tps) || tps <= 0) {
-            alert("Enter the correct number of ticks per second.");
             return;
         }
 
@@ -108,7 +112,7 @@ function tick() {
 }
 
 function copyField() {
-    let result = game.export_field();
+    let result = "v2w" + width + ";" + WasmGame.encode_field(game.export_field());
 
     navigator.clipboard.writeText(result)
         .then(() => alert("The field is copied to the clipboard."))
@@ -128,18 +132,29 @@ function toggleCellAtEvent(event) {
     }
 }
 
-async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
-    await init();
+function parseField(input, currentWidth) {
+    const [header, data] = input.includes(";") ? input.trim().split(';') : ["v1w" + currentWidth, input];
+    const match = header.match(/^v([12])w(\d+)$/);
 
+    const version = match ? parseInt(match[1], 10) : 1;
+    const width = match ? parseInt(match[2], 10) : currentWidth;
+
+    const decoded = version === 2 ? WasmGame.decode_field(data) : data;
+    const normalized = currentWidth == width ? decoded : WasmGame.adapt_field_width(decoded, width, currentWidth);
+
+    return normalized;
+}
+
+async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
     width = parseInt(widthInput);
     height = parseInt(heightInput);
     const rule = ruleInput.trim();
 
-    const cleaned = fieldInput.trim();
+    const text = parseField(fieldInput, width);
 
     let field = new Uint8Array(width * height);
     for (let i = 0; i < field.length; i++) {
-        const ch = cleaned[i];
+        const ch = text[i];
         field[i] = ch === "1" ? 1 : 0;
     }
 
@@ -174,17 +189,23 @@ async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
 }
 
 function updatePreview() {
-    const text = document.getElementById("fieldInput").value.trim();
     const w = parseInt(document.getElementById("widthInput").value, 10);
     const h = parseInt(document.getElementById("heightInput").value, 10);
+
+    const text = parseField(document.getElementById("fieldInput").value, w);
     drawPreviewField(text, w, h);
 }
-
-updatePreview();
 
 document.getElementById("fieldInput").addEventListener("input", updatePreview);
 document.getElementById("widthInput").addEventListener("input", updatePreview);
 document.getElementById("heightInput").addEventListener("input", updatePreview);
+
+document.getElementById("tps").addEventListener("input", () => {
+    if (playing) {
+        togglePlay();
+        togglePlay();
+    }
+});
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 

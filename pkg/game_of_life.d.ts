@@ -7,6 +7,9 @@ export class WasmGame {
   get_cell(x: number, y: number): boolean;
   set_cell(x: number, y: number, value: boolean): void;
   export_field(): string;
+  static encode_field(decoded: string): string;
+  static decode_field(encoded: string): string;
+  static adapt_field_width(matrix_str: string, old_width: number, new_width: number): string;
 }
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
@@ -19,6 +22,9 @@ export interface InitOutput {
   readonly wasmgame_get_cell: (a: number, b: number, c: number) => number;
   readonly wasmgame_set_cell: (a: number, b: number, c: number, d: number) => void;
   readonly wasmgame_export_field: (a: number) => [number, number];
+  readonly wasmgame_encode_field: (a: number, b: number) => [number, number];
+  readonly wasmgame_decode_field: (a: number, b: number) => [number, number];
+  readonly wasmgame_adapt_field_width: (a: number, b: number, c: number, d: number) => [number, number];
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
