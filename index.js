@@ -113,7 +113,7 @@ function tick() {
 }
 
 function copyField() {
-    let result = width + "w" + WasmGame.encode_field(game.export_field());
+    let result = "v2w" + width + ";" + WasmGame.encode_field(game.export_field());
 
     navigator.clipboard.writeText(result)
         .then(() => alert("The field is copied to the clipboard."))
@@ -133,18 +133,29 @@ function toggleCellAtEvent(event) {
     }
 }
 
+function parseField(input, currentWidth) {
+    const [header, data] = input.includes(";") ? input.trim().split(';') : ["v1w" + currentWidth, input];
+    const match = header.match(/^v([12])w(\d+)$/);
+
+    const version = match ? parseInt(match[1], 10) : 1;
+    const width = match ? parseInt(match[2], 10) : currentWidth;
+
+    const decoded = version === 2 ? WasmGame.decode_field(data) : data;
+    const normalized = currentWidth == width ? decoded : WasmGame.adapt_field_width(decoded, width, currentWidth);
+
+    return normalized;
+}
+
 async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
     width = parseInt(widthInput);
     height = parseInt(heightInput);
     const rule = ruleInput.trim();
 
-    const [expectedWidth, encodedField] = fieldInput.trim().split("w");
-    const decoded = WasmGame.decode_field(encodedField);
-    const cleaned = width == expectedWidth ? decoded : WasmGame.adapt_field_width(decoded, expectedWidth, width);
+    const text = parseField(fieldInput, width);
 
     let field = new Uint8Array(width * height);
     for (let i = 0; i < field.length; i++) {
-        const ch = cleaned[i];
+        const ch = text[i];
         field[i] = ch === "1" ? 1 : 0;
     }
 
@@ -179,19 +190,11 @@ async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
 }
 
 function updatePreview() {
-
     const w = parseInt(document.getElementById("widthInput").value, 10);
     const h = parseInt(document.getElementById("heightInput").value, 10);
 
-    const input = document.getElementById("fieldInput").value.trim();
-    const text = input === "" ? "100w01" : input;
-
-
-    const [expectedWidth, encodedField] = text.trim().split("w");
-    const decoded = WasmGame.decode_field(encodedField);
-    const cleaned = w == expectedWidth ? decoded : WasmGame.adapt_field_width(decoded, expectedWidth, w);
-
-    drawPreviewField(cleaned, w, h);
+    const text = parseField(document.getElementById("fieldInput").value, w);
+    drawPreviewField(text, w, h);
 }
 
 document.getElementById("fieldInput").addEventListener("input", updatePreview);
