@@ -15,6 +15,7 @@ const previewCellSize = 5;
 
 window.tick = tick;
 window.copyField = copyField;
+window.copyUrl = copyUrl;
 window.togglePlay = togglePlay;
 window.clearGrid = clearGrid;
 
@@ -119,6 +120,17 @@ function copyField() {
     navigator.clipboard.writeText(result)
         .then(() => alert("The field is copied to the clipboard."))
         .catch(err => console.error("A copying error:", err));
+}
+
+function copyUrl() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url)
+        .then(() => {
+            console.log("URL copied to clipboard:", url);
+        })
+        .catch(err => {
+            console.error("Failed to copy URL:", err);
+        });
 }
 
 function toggleCellAtEvent(event) {
