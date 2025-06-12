@@ -44,7 +44,6 @@ function togglePlay() {
     if (!playing) {
         const tps = parseInt(document.getElementById("tps").value, 10);
         if (isNaN(tps) || tps <= 0) {
-            alert("Enter the correct number of ticks per second.");
             return;
         }
 
@@ -200,6 +199,13 @@ function updatePreview() {
 document.getElementById("fieldInput").addEventListener("input", updatePreview);
 document.getElementById("widthInput").addEventListener("input", updatePreview);
 document.getElementById("heightInput").addEventListener("input", updatePreview);
+
+document.getElementById("tps").addEventListener("input", () => {
+    if (playing) {
+        togglePlay();
+        togglePlay();
+    }
+});
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
