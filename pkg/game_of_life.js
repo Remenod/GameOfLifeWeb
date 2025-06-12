@@ -80,6 +80,84 @@ function passStringToWasm0(arg, malloc, realloc) {
     WASM_VECTOR_LEN = offset;
     return ptr;
 }
+/**
+ * @param {string} decoded
+ * @returns {string}
+ */
+export function encode_field(decoded) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passStringToWasm0(decoded, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.encode_field(ptr0, len0);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
+
+/**
+ * @param {string} encoded
+ * @returns {string}
+ */
+export function decode_field(encoded) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passStringToWasm0(encoded, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.decode_field(ptr0, len0);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
+
+/**
+ * @param {string} matrix_str
+ * @param {number} old_width
+ * @param {number} new_width
+ * @returns {string}
+ */
+export function adapt_field_width(matrix_str, old_width, new_width) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passStringToWasm0(matrix_str, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.adapt_field_width(ptr0, len0, old_width, new_width);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
+
+/**
+ * @param {string} input
+ * @param {number} current_width
+ * @returns {string}
+ */
+export function parse_field(input, current_width) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passStringToWasm0(input, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.parse_field(ptr0, len0, current_width);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
 
 const WasmGameFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
@@ -147,62 +225,6 @@ export class WasmGame {
             return getStringFromWasm0(ret[0], ret[1]);
         } finally {
             wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
-        }
-    }
-    /**
-     * @param {string} decoded
-     * @returns {string}
-     */
-    static encode_field(decoded) {
-        let deferred2_0;
-        let deferred2_1;
-        try {
-            const ptr0 = passStringToWasm0(decoded, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-            const len0 = WASM_VECTOR_LEN;
-            const ret = wasm.wasmgame_encode_field(ptr0, len0);
-            deferred2_0 = ret[0];
-            deferred2_1 = ret[1];
-            return getStringFromWasm0(ret[0], ret[1]);
-        } finally {
-            wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
-        }
-    }
-    /**
-     * @param {string} encoded
-     * @returns {string}
-     */
-    static decode_field(encoded) {
-        let deferred2_0;
-        let deferred2_1;
-        try {
-            const ptr0 = passStringToWasm0(encoded, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-            const len0 = WASM_VECTOR_LEN;
-            const ret = wasm.wasmgame_decode_field(ptr0, len0);
-            deferred2_0 = ret[0];
-            deferred2_1 = ret[1];
-            return getStringFromWasm0(ret[0], ret[1]);
-        } finally {
-            wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
-        }
-    }
-    /**
-     * @param {string} matrix_str
-     * @param {number} old_width
-     * @param {number} new_width
-     * @returns {string}
-     */
-    static adapt_field_width(matrix_str, old_width, new_width) {
-        let deferred2_0;
-        let deferred2_1;
-        try {
-            const ptr0 = passStringToWasm0(matrix_str, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-            const len0 = WASM_VECTOR_LEN;
-            const ret = wasm.wasmgame_adapt_field_width(ptr0, len0, old_width, new_width);
-            deferred2_0 = ret[0];
-            deferred2_1 = ret[1];
-            return getStringFromWasm0(ret[0], ret[1]);
-        } finally {
-            wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
         }
     }
 }
