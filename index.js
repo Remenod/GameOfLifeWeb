@@ -235,9 +235,7 @@ function loadFromUrlParams() {
     const width = params.get("w");
     const height = params.get("h");
     const rule = params.get("r");
-
-    const rawField = params.get("f");
-    const field = rawField !== null ? decodeURIComponent(rawField) : "";
+    const field = decodeURIComponent(params.get("f") || "");
 
     if (width) document.getElementById("widthInput").value = width;
     if (height) document.getElementById("heightInput").value = height;
