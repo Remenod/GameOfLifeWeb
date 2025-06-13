@@ -28,3 +28,25 @@ export function loadFromUrlParams() {
     if (rule) document.getElementById("ruleInput").value = rule;
     if (field) document.getElementById("fieldInput").value = field;
 }
+
+export function enforceDisabledControls() {
+    document.querySelectorAll('.controls.card button, .controls.card input')
+        .forEach(el => el.disabled = true);
+}
+
+export function showToast(message, duration = 1500) {
+    const toast = document.createElement("div");
+    toast.className = "toast-message";
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.classList.add("show");
+    });
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}

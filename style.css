@@ -1,21 +1,117 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f7f9fb;
+    color: #222;
+    padding: 20px;
+    line-height: 1.6;
 }
 
-canvas {
-    border: 1px solid #ccc;
-    display: block;
-    margin-top: 16px;
+h1 {
+    text-align: center;
+    margin-bottom: 24px;
 }
 
-label {
-    margin-right: 8px;
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    margin-bottom: 4px;
+    font-weight: 500;
 }
 
 input,
+textarea,
 button {
-    margin: 4px;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+textarea {
+    resize: vertical;
+    font-family: monospace;
+}
+
+button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+button:hover {
+    background-color: #357bd8;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.form-preview {
+    margin-top: 16px;
+}
+
+#previewCanvas {
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+#canvas {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    margin-top: 16px;
+    display: block;
+}
+
+.short-input {
+    width: 10ch;
+}
+
+.controls.disabled * {
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 .toast-message {
@@ -23,14 +119,14 @@ button {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #fff;
-    color: #000;
+    background: #333;
+    color: #fff;
     padding: 10px 20px;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    z-index: 9999;
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 9999;
 }
 
 .toast-message.show {
