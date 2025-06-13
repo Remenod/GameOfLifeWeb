@@ -50,3 +50,14 @@ export function showToast(message, duration = 1500) {
         setTimeout(() => toast.remove(), 300);
     }, duration);
 }
+
+export function resetElementValue(elementId, defaultValue = "") {
+    const el = document.getElementById(elementId);
+    if (el) {
+        el.value = defaultValue;
+
+        const event = new Event("input", { bubbles: true });
+        el.dispatchEvent(event);
+    }
+
+}
