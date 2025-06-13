@@ -13,9 +13,10 @@ export function copyUrl() {
         });
 }
 
-export async function pasteTemplate() {
+document.getElementById("pasteBtn").addEventListener("click", async () => {
     try {
-        const text = await navigator.clipboard.readText().trim();
+        const rawText = await navigator.clipboard.readText();
+        const text = rawText.trim();
 
         const isValid =
             /^v([123])w(\d+);.*$/.test(text) ||
@@ -31,7 +32,7 @@ export async function pasteTemplate() {
         showToast('Unable to paste. Allow access to the clipboard.');
         console.error(err);
     }
-}
+});
 
 document.getElementById("fieldInput").addEventListener("input", () => { updatePreviewCanvas(), updateUrlParams() });
 document.getElementById("widthInput").addEventListener("input", () => { updatePreviewCanvas(), updateUrlParams() });
