@@ -27,7 +27,13 @@ document.getElementById("pasteBtn").addEventListener("click", async () => {
             return;
         }
 
-        document.getElementById('fieldInput').value = text;
+        const el = document.getElementById('fieldInput');
+        if (el) {
+            el.value = text;
+
+            const event = new Event("input", { bubbles: true });
+            el.dispatchEvent(event);
+        }
     } catch (err) {
         showToast('Unable to paste. Allow access to the clipboard.');
         console.error(err);
