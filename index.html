@@ -1,55 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Game of Life</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <form id="settingsForm" style="display: flex; gap: 10px; align-items: flex-start;">
-        <div style="flex-grow: 1;">
-            <label>
-                Width: <input type="number" id="widthInput" value="100" min="1" max="1000" required>
-            </label>
-            <label>
-                Height: <input type="number" id="heightInput" value="100" min="1" max="1000" required>
-            </label>
-            <label>
-                Rule: <input type="text" id="ruleInput" value="B3/S23" required>
-            </label>
-            <label>
-                <button type="button" onclick="copyUrl()">Copy Link</button>
-            </label>
-            <label>
-                <br>Field template(optional):<br>
-                <textarea id="fieldInput" placeholder="Leave blank for empty field" rows="10" cols="50"
-                    style="font-family: monospace;"></textarea>
-            </label>
-            <div>
+    <div class="container">
+        <h1>Game of Life</h1>
+
+        <form id="settingsForm" class="card">
+            <div class="form-group">
+                <label>Width</label>
+                <input type="number" id="widthInput" value="100" min="1" max="1000" required />
+            </div>
+
+            <div class="form-group">
+                <label>Height</label>
+                <input type="number" id="heightInput" value="100" min="1" max="1000" required />
+            </div>
+
+            <div class="form-group">
+                <label>Rule</label>
+                <input type="text" id="ruleInput" value="B3/S23" required />
+            </div>
+
+            <div class="form-group">
+                <label>Field Template (optional)</label>
+                <textarea id="fieldInput" placeholder="Leave blank for empty field" rows="6"></textarea>
+            </div>
+
+            <div class="form-actions">
                 <button type="submit">Start Game</button>
+                <button type="button" onclick="copyUrl()">Copy Link</button>
+            </div>
+
+            <div class="form-preview">
+                <label>Preview:</label>
+                <canvas id="previewCanvas" width="300" height="300"></canvas>
+            </div>
+        </form>
+
+        <div class="controls card">
+            <label for="tps">Game speed</label>
+            <input type="number" id="tps" value="20" min="1" class="short-input" disabled />
+
+            <button onclick="togglePlay()" id="playPauseBtn" disabled>Play</button>
+            <button id="tickBtn" onclick="tick()" disabled>Next turn</button>
+            <button id="clearBtn" onclick="clearGrid()" disabled>Clear</button>
+
+            <div class="copy-group">
+                <label>Copy field template:</label>
+                <div class="button-group">
+                    <button onclick="copyField_v1()" disabled>v1</button>
+                    <button onclick="copyField_v2()" disabled>v2</button>
+                    <button onclick="copyField_v3()" disabled>v3</button>
+                </div>
             </div>
         </div>
 
-        <div>
-            <label>Preview:</label><br>
-            <canvas id="previewCanvas" width="300" height="300" style="border:1px solid #ccc;"></canvas>
-        </div>
-    </form>
 
+        <canvas id="canvas"></canvas>
+    </div>
 
-    <canvas id="canvas"></canvas>
-
-    <input type="number" id="tps" value="20" min="1" style="width: 60px;" />
-    <button id="playPauseBtn" onclick="togglePlay()">Play</button>
-
-    <button onclick="tick()">Next</button>
-    <button onclick="clearGrid()">Clear</button>
-    <button onclick="copyField_v1()">Copy field template v1</button>
-    <button onclick="copyField_v2()">Copy field template v2</button>
-    <button onclick="copyField_v3()">Copy field template v3</button>
-
+    <div class="toast-message" id="toast">Copied!</div>
     <script type="module" src="js/main.js"></script>
 </body>
 

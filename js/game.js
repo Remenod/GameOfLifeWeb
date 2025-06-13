@@ -1,10 +1,11 @@
-import { WasmGame, parse_field, encode_field } from "../pkg/game_of_life.js";
 import { drawGrid } from "./canvas.js";
+import { showToast } from "./utils.js";
+import { WasmGame, parse_field, encode_field } from "../pkg/game_of_life.js";
 
 export let game;
 export let width, height;
 export let playing = false;
-let intervalId = null;
+let autoTickInterval = null;
 
 
 export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
@@ -22,26 +23,31 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
 
     game = new WasmGame(width, height, field, rule);
     drawGrid();
+
+    document.querySelectorAll('.controls.card button, .controls.card input')
+        .forEach(el => el.disabled = false);
 }
 
-export function togglePlay() {
+export function togglePlay(disableTickBtn = true) {
     const btn = document.getElementById("playPauseBtn");
 
     if (!playing) {
-        const tps = parseInt(document.getElementById("tps").value, 10);
-        if (isNaN(tps) || tps <= 0) {
+        const tps = parseInt(document.getElementById("tps").value, 10) ?? 0;
+        if (isNaN(tps) || tps < 0) {
             return;
         }
 
-        intervalId = setInterval(tick, 1000 / tps);
+        autoTickInterval = setInterval(tick, (1000 / tps) ?? 0);
 
         btn.textContent = "Pause";
         playing = true;
     } else {
-        clearInterval(intervalId);
+        clearInterval(autoTickInterval);
         btn.textContent = "Play";
         playing = false;
     }
+    if (disableTickBtn)
+        document.getElementById('tickBtn').disabled = playing;
 }
 
 function copyField(version, encoder = null) {
@@ -52,7 +58,7 @@ function copyField(version, encoder = null) {
     let result = `${version}w${width};${field}`;
 
     navigator.clipboard.writeText(result)
-        .then(() => showToast(`The ${version} template is copied to the clipboard.`))
+        .then(() => showToast(`The ${version} template is copied.`))
         .catch(err => console.error("A copying error:", err));
 }
 
@@ -68,26 +74,6 @@ export function copyFieldV3() {
     copyField("v3", f => encode_field(f, true));
 }
 
-
-function showToast(message, duration = 1500) {
-    const toast = document.createElement("div");
-    toast.className = "toast-message";
-    toast.textContent = message;
-
-    document.body.appendChild(toast);
-
-    requestAnimationFrame(() => {
-        toast.classList.add("show");
-    });
-
-    setTimeout(() => {
-        toast.classList.remove("show");
-        setTimeout(() => toast.remove(), 300);
-    }, duration);
-}
-
-
-
 export function tick() {
     game.tick();
     drawGrid();
@@ -95,7 +81,7 @@ export function tick() {
 
 document.getElementById("tps").addEventListener("input", () => {
     if (playing) {
-        togglePlay();
-        togglePlay();
+        togglePlay(false);
+        togglePlay(false);
     }
 });

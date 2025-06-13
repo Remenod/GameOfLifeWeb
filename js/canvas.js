@@ -19,7 +19,6 @@ export function clearGrid() {
     drawGrid();
 }
 
-
 export function drawGrid() {
     canvas.width = width * cellSize;
     canvas.height = height * cellSize;
@@ -50,10 +49,31 @@ export function drawGrid() {
     }
 }
 
-export function toggleCellAtEvent(event) {
+function getCanvasCoords(event) {
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / cellSize);
-    const y = Math.floor((event.clientY - rect.top) / cellSize);
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    let clientX, clientY;
+
+    if (event.touches) {
+        // TouchEvent
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else {
+        // MouseEvent
+        clientX = event.clientX;
+        clientY = event.clientY;
+    }
+
+    const x = Math.floor((clientX - rect.left) * scaleX / cellSize);
+    const y = Math.floor((clientY - rect.top) * scaleY / cellSize);
+    return { x, y };
+}
+
+function toggleCellAtEvent(event) {
+    const { x, y } = getCanvasCoords(event);
+
     const key = `${x},${y}`;
     if (x >= 0 && x < width && y >= 0 && y < height && !toggledCells.has(key)) {
         const alive = game.get_cell(x, y);
@@ -63,7 +83,6 @@ export function toggleCellAtEvent(event) {
     }
 }
 
-
 canvas.addEventListener("mousedown", (event) => {
     isDragging = true;
     toggledCells.clear();
@@ -71,9 +90,7 @@ canvas.addEventListener("mousedown", (event) => {
 });
 
 canvas.addEventListener("mousemove", (event) => {
-    if (isDragging) {
-        toggleCellAtEvent(event);
-    }
+    if (isDragging) toggleCellAtEvent(event);
 });
 
 canvas.addEventListener("mouseup", () => {
@@ -85,3 +102,26 @@ canvas.addEventListener("mouseleave", () => {
     isDragging = false;
     toggledCells.clear();
 });
+
+canvas.addEventListener("touchstart", (event) => {
+    event.preventDefault();
+    isDragging = true;
+    toggledCells.clear();
+    toggleCellAtEvent(event);
+}, { passive: false });
+
+canvas.addEventListener("touchmove", (event) => {
+    event.preventDefault();
+    if (isDragging) toggleCellAtEvent(event);
+}, { passive: false });
+
+canvas.addEventListener("touchend", () => {
+    isDragging = false;
+    toggledCells.clear();
+});
+
+canvas.addEventListener("touchcancel", () => {
+    isDragging = false;
+    toggledCells.clear();
+});
+

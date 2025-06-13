@@ -1,4 +1,4 @@
-import { updateUrlParams } from "./url-args.js";
+import { updateUrlParams } from "./utils.js";
 import { updatePreviewCanvas } from "./preview-canvas.js";
 import { playing, togglePlay, runGame } from "./game.js";
 
