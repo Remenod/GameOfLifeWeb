@@ -1,4 +1,4 @@
-import { updateUrlParams } from "./utils.js";
+import { updateUrlParams, showToast } from "./utils.js";
 import { updatePreviewCanvas } from "./preview-canvas.js";
 import { playing, togglePlay, runGame } from "./game.js";
 
@@ -11,6 +11,26 @@ export function copyUrl() {
         .catch(err => {
             console.error("Failed to copy URL:", err);
         });
+}
+
+export async function pasteTemplate() {
+    try {
+        const text = await navigator.clipboard.readText().trim();
+
+        const isValid =
+            /^v([123])w(\d+);.*$/.test(text) ||
+            /^[01\s\r\n]+$/.test(text);
+
+        if (!isValid) {
+            showToast('Invalid template format. Expecting v1/v2/v3wN;* or only 0/1.');
+            return;
+        }
+
+        document.getElementById('fieldInput').value = text;
+    } catch (err) {
+        showToast('Unable to paste. Allow access to the clipboard.');
+        console.error(err);
+    }
 }
 
 document.getElementById("fieldInput").addEventListener("input", () => { updatePreviewCanvas(), updateUrlParams() });

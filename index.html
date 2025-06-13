@@ -15,22 +15,35 @@
         <form id="settingsForm" class="card">
             <div class="form-group">
                 <label>Width</label>
-                <input type="number" id="widthInput" value="100" min="1" max="1000" required />
+                <div class="input-with-button">
+                    <input type="number" id="widthInput" value="100" min="1" max="10000" required />
+                    <button type="button" onclick="resetElementValue('widthInput',100)">Reset</button>
+                </div>
             </div>
 
             <div class="form-group">
                 <label>Height</label>
-                <input type="number" id="heightInput" value="100" min="1" max="1000" required />
+                <div class="input-with-button">
+                    <input type="number" id="heightInput" value="100" min="1" max="10000" required />
+                    <button type="button" onclick="resetElementValue('heightInput',100)">Reset</button>
+                </div>
             </div>
 
             <div class="form-group">
                 <label>Rule</label>
-                <input type="text" id="ruleInput" value="B3/S23" required />
+                <div class="input-with-button">
+                    <input type="text" id="ruleInput" value="B3/S23" required />
+                    <button type="button" onclick="resetElementValue('ruleInput','B3/S23')">Reset</button>
+                </div>
             </div>
 
             <div class="form-group">
                 <label>Field Template (optional)</label>
                 <textarea id="fieldInput" placeholder="Leave blank for empty field" rows="6"></textarea>
+                <div class="button-row">
+                    <button type="button" onclick="pasteTemplate()">Paste template</button>
+                    <button type="button" onclick="resetElementValue('fieldInput')">Clear template</button>
+                </div>
             </div>
 
             <div class="form-actions">
@@ -39,7 +52,7 @@
             </div>
 
             <div class="form-preview">
-                <label>Preview:</label>
+                <label>Preview:</label><br>
                 <canvas id="previewCanvas" width="300" height="300"></canvas>
             </div>
         </form>

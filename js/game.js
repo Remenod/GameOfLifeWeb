@@ -62,15 +62,15 @@ function copyField(version, encoder = null) {
         .catch(err => console.error("A copying error:", err));
 }
 
-export function copyFieldV1() {
+export function copyField_v1() {
     copyField("v1");
 }
 
-export function copyFieldV2() {
+export function copyField_v2() {
     copyField("v2", f => encode_field(f, false));
 }
 
-export function copyFieldV3() {
+export function copyField_v3() {
     copyField("v3", f => encode_field(f, true));
 }
 

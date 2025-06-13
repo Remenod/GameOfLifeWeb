@@ -30,6 +30,16 @@ h1 {
     margin-bottom: 20px;
 }
 
+.input-with-button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.input-with-button input {
+    flex: 1;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -39,6 +49,22 @@ h1 {
 .form-group label {
     margin-bottom: 4px;
     font-weight: 500;
+}
+
+.form-group textarea {
+    resize: vertical;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 120px;
+}
+
+.form-group .button-row {
+    margin-top: 8px;
+    display: flex;
+    gap: 10px;
 }
 
 input,
