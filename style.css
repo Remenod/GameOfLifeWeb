@@ -114,6 +114,7 @@ button:disabled {
     width: 100%;
     max-width: 300px;
     height: auto;
+    image-rendering: pixelated;
 }
 
 .controls {
@@ -129,6 +130,7 @@ button:disabled {
     border: 1px solid #ddd;
     margin-top: 16px;
     display: block;
+    image-rendering: pixelated;
 }
 
 .short-input {

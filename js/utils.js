@@ -25,7 +25,7 @@ export function loadFromUrlParams() {
 
     if (width) document.getElementById("widthInput").value = width;
     if (height) document.getElementById("heightInput").value = height;
-    if (rule) document.getElementById("ruleInput").value = rule.replace(".", ";");
+    if (rule) document.getElementById("ruleInput").value = rule.replace(".", "/");
     if (field) document.getElementById("fieldInput").value = field.replace(/-/g, '[').replace(/_/g, "]").replace(".", ";");
 }
 
