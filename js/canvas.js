@@ -6,7 +6,7 @@ let canvas = document.getElementById("canvas");;
 let ctx = canvas.getContext("2d");
 
 let isDragging = false;
-let toggledCells = new Set();
+let toggledCells;
 
 export async function initToggledCells() {
     toggledCells = new BoundedSetQueue(20);
