@@ -1,4 +1,5 @@
 use crate::game_rule::GameRule;
+use bitvec::prelude::*;
 
 const OFFSETS: [(isize, isize); 8] = [
     (-1, -1),
@@ -14,18 +15,18 @@ const OFFSETS: [(isize, isize); 8] = [
 pub struct GameOfLife {
     width: usize,
     height: usize,
-    current_field: Vec<bool>,
-    next_field: Vec<bool>,
+    current_field: BitVec,
+    next_field: BitVec,
     game_rule: GameRule,
 }
 
 impl GameOfLife {
-    pub fn new(width: usize, height: usize, current: Vec<bool>, game_rule: GameRule) -> GameOfLife {
+    pub fn new(width: usize, height: usize, current: BitVec, game_rule: GameRule) -> GameOfLife {
         GameOfLife {
             width: width,
             height: height,
             current_field: current,
-            next_field: vec![false; width * height],
+            next_field: bitvec![0; width * height],
             game_rule: game_rule,
         }
     }
@@ -56,7 +57,8 @@ impl GameOfLife {
 
     pub fn next_turn(&mut self) {
         for i in 0..(self.height * self.width) {
-            self.next_field[i] = self.check_cell_next_turn(i);
+            let v = self.check_cell_next_turn(i);
+            self.next_field.set(i, v);
         }
 
         std::mem::swap(&mut self.current_field, &mut self.next_field);
@@ -79,10 +81,10 @@ impl GameOfLife {
             return;
         }
 
-        self.current_field[index] = value;
+        self.current_field.set(index, value);
     }
 
-    pub fn get_field(&self) -> &Vec<bool> {
+    pub fn get_field(&self) -> &BitVec {
         &self.current_field
     }
 }
