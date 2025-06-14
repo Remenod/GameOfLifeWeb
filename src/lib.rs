@@ -1,3 +1,4 @@
+mod bounded_set_queue;
 mod game_of_life;
 mod game_rule;
 

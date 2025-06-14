@@ -1,8 +1,8 @@
 import init from "../pkg/game_of_life.js";
-import { clearGrid } from "./canvas.js";
+import { copyUrl } from "./form.js";
 import { loadFromUrlParams } from "./utils.js";
 import { updatePreviewCanvas } from "./preview-canvas.js";
-import { copyUrl } from "./form.js";
+import { clearGrid, initToggledCells } from "./canvas.js";
 import { enforceDisabledControls, resetElementValue } from "./utils.js";
 import { togglePlay, copyField_v1, copyField_v2, copyField_v3, tick } from "./game.js";
 
@@ -20,4 +20,5 @@ window.resetElementValue = resetElementValue;
 
 await init().then(() => {
     updatePreviewCanvas();
+    initToggledCells();
 });

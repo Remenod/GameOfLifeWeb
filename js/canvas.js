@@ -1,3 +1,4 @@
+import { BoundedSetQueue } from "../pkg/game_of_life.js";
 import { togglePlay, height, width, game, playing } from "./game.js";
 
 const cellSize = 10;
@@ -6,6 +7,10 @@ let ctx = canvas.getContext("2d");
 
 let isDragging = false;
 let toggledCells = new Set();
+
+export async function initToggledCells() {
+    toggledCells = new BoundedSetQueue(20);
+}
 
 export function clearGrid() {
     if (playing) {
