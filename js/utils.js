@@ -8,8 +8,8 @@ export function updateUrlParams() {
 
     if (width) params.set("w", width);
     if (height) params.set("h", height);
-    if (rule) params.set("r", rule);
-    if (field) params.set("f", field);
+    if (rule) params.set("r", rule.replace("/", "."));
+    if (field) params.set("f", field.replace(/\[/g, '-').replace(/\]/g, '_').replace(";", '.'));
 
     const newUrl = `${location.pathname}?${params.toString()}`;
     history.replaceState(null, "", newUrl);
@@ -21,12 +21,12 @@ export function loadFromUrlParams() {
     const width = params.get("w");
     const height = params.get("h");
     const rule = params.get("r");
-    const field = decodeURIComponent(params.get("f") || "");
+    const field = params.get("f");
 
     if (width) document.getElementById("widthInput").value = width;
     if (height) document.getElementById("heightInput").value = height;
-    if (rule) document.getElementById("ruleInput").value = rule;
-    if (field) document.getElementById("fieldInput").value = field;
+    if (rule) document.getElementById("ruleInput").value = rule.replace(".", ";");
+    if (field) document.getElementById("fieldInput").value = field.replace(/-/g, '[').replace(/_/g, "]").replace(".", ";");
 }
 
 export function enforceDisabledControls() {
