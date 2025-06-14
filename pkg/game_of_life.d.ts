@@ -4,6 +4,13 @@ export function encode_field(decoded: string, v3mode: boolean): string;
 export function decode_field(encoded: string, v3mode: boolean): string;
 export function adapt_field_width(matrix_str: string, old_width: number, new_width: number): string;
 export function parse_field(input: string, current_width: number): string;
+export class BoundedSetQueue {
+  free(): void;
+  constructor(limit: number);
+  has(value: string): boolean;
+  add(value: string): void;
+  clear(): void;
+}
 export class WasmGame {
   free(): void;
   constructor(width: number, height: number, field: Uint8Array, rule: string);
@@ -27,6 +34,11 @@ export interface InitOutput {
   readonly decode_field: (a: number, b: number, c: number) => [number, number];
   readonly adapt_field_width: (a: number, b: number, c: number, d: number) => [number, number];
   readonly parse_field: (a: number, b: number, c: number) => [number, number];
+  readonly __wbg_boundedsetqueue_free: (a: number, b: number) => void;
+  readonly boundedsetqueue_new: (a: number) => number;
+  readonly boundedsetqueue_has: (a: number, b: number, c: number) => number;
+  readonly boundedsetqueue_add: (a: number, b: number, c: number) => void;
+  readonly boundedsetqueue_clear: (a: number) => void;
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;

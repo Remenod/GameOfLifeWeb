@@ -161,6 +161,55 @@ export function parse_field(input, current_width) {
     }
 }
 
+const BoundedSetQueueFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_boundedsetqueue_free(ptr >>> 0, 1));
+
+export class BoundedSetQueue {
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        BoundedSetQueueFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_boundedsetqueue_free(ptr, 0);
+    }
+    /**
+     * @param {number} limit
+     */
+    constructor(limit) {
+        const ret = wasm.boundedsetqueue_new(limit);
+        this.__wbg_ptr = ret >>> 0;
+        BoundedSetQueueFinalization.register(this, this.__wbg_ptr, this);
+        return this;
+    }
+    /**
+     * @param {string} value
+     * @returns {boolean}
+     */
+    has(value) {
+        const ptr0 = passStringToWasm0(value, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.boundedsetqueue_has(this.__wbg_ptr, ptr0, len0);
+        return ret !== 0;
+    }
+    /**
+     * @param {string} value
+     */
+    add(value) {
+        const ptr0 = passStringToWasm0(value, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.boundedsetqueue_add(this.__wbg_ptr, ptr0, len0);
+    }
+    clear() {
+        wasm.boundedsetqueue_clear(this.__wbg_ptr);
+    }
+}
+
 const WasmGameFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_wasmgame_free(ptr >>> 0, 1));
