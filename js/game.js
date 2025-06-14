@@ -7,11 +7,21 @@ export let width, height;
 export let playing = false;
 let autoTickInterval = null;
 
+const ruleRegex = /^B[0-8]*\/S[0-8]*$/g;
 
 export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
     width = parseInt(widthInput);
     height = parseInt(heightInput);
     const rule = ruleInput.trim();
+
+    if (!ruleRegex.test(rule)) {
+        showToast("The rule isn't correct");
+        const ruleInputEl = document.getElementById('ruleInput');
+        ruleInputEl.classList.remove('flash-red');
+        void ruleInputEl.offsetWidth;
+        ruleInputEl.classList.add('flash-red');
+        return;
+    }
 
     const text = parse_field(fieldInput, width);
 
