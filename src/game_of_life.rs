@@ -52,7 +52,7 @@ impl GameOfLife {
             .sum();
 
         self.game_rule
-            .is_survive(self.current_field[index], &neighbours)
+            .may_survive(self.current_field[index], &neighbours)
     }
 
     pub fn next_turn(&mut self) {

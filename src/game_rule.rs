@@ -10,14 +10,14 @@ pub struct GameRule {
 }
 
 impl GameRule {
-    // pub fn new(born: HashSet<u8>, survive: HashSet<u8>) -> GameRule {
-    //     GameRule {
-    //         birth_rules: born,
-    //         survive_rules: survive,
-    //     }
-    // }
+    pub fn new(born: HashSet<u8>, survive: HashSet<u8>) -> GameRule {
+        GameRule {
+            birth_rules: born,
+            survive_rules: survive,
+        }
+    }
 
-    pub fn is_survive(&self, current: bool, neighbours_count: &u8) -> bool {
+    pub fn may_survive(&self, current: bool, neighbours_count: &u8) -> bool {
         if current {
             self.survive_rules.contains(&neighbours_count)
         } else {
@@ -60,5 +60,11 @@ impl TryFrom<&str> for GameRule {
             birth_rules: born_state,
             survive_rules: survive_state,
         })
+    }
+}
+
+impl Default for GameRule {
+    fn default() -> Self {
+        GameRule::new([3].into_iter().collect(), [2, 3].into_iter().collect())
     }
 }

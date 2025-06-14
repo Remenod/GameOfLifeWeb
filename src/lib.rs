@@ -19,7 +19,7 @@ impl WasmGame {
                 width,
                 height,
                 field.into_iter().map(|b| b != 0).collect(),
-                rule.try_into().unwrap(),
+                rule.try_into().unwrap_or_default(),
             ),
         }
     }
