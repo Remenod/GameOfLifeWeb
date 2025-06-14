@@ -7,9 +7,11 @@ export function copyUrl() {
     navigator.clipboard.writeText(url)
         .then(() => {
             console.log("URL copied to clipboard:", url);
+            showToast("URL copied to clipboard");
         })
         .catch(err => {
             console.error("Failed to copy URL:", err);
+            showToast("Failed to copy URL");
         });
 }
 
