@@ -17,6 +17,25 @@ h1 {
     margin-bottom: 24px;
 }
 
+@keyframes flashRed {
+
+    0%,
+    100% {
+        border-color: initial;
+        background: initial;
+    }
+
+    50% {
+        border-color: red;
+        background: rgba(255, 0, 0, 0.247);
+    }
+}
+
+.flash-red {
+    animation: flashRed 0.45s ease-in-out;
+    outline: none;
+}
+
 .container {
     max-width: 900px;
     margin: auto;
