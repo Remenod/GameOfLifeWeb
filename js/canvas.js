@@ -49,6 +49,19 @@ export function drawGrid() {
     }
 }
 
+export function updateImageRendering() {
+    const cellWidthPx = canvas.clientWidth / width;
+    const cellHeightPx = canvas.clientHeight / height;
+
+    const pixelatedThreshold = 25;
+
+    if (cellWidthPx >= pixelatedThreshold || cellHeightPx >= pixelatedThreshold) {
+        canvas.style.imageRendering = 'pixelated';
+    } else {
+        canvas.style.imageRendering = 'auto';
+    }
+}
+
 function getCanvasCoords(event) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
