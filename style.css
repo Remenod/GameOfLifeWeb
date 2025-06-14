@@ -153,7 +153,13 @@ button:disabled {
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 9999;
+
+    max-width: 90%;
+    width: fit-content;
+    text-align: center;
+    word-break: break-word;
 }
+
 
 .toast-message.show {
     opacity: 1;
