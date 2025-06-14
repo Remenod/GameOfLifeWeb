@@ -15,6 +15,7 @@ const OFFSETS: [(isize, isize); 8] = [
 pub struct GameOfLife {
     width: usize,
     height: usize,
+    total_cells: usize,
     current_field: BitVec,
     next_field: BitVec,
     game_rule: GameRule,
@@ -25,6 +26,7 @@ impl GameOfLife {
         GameOfLife {
             width: width,
             height: height,
+            total_cells: height * width,
             current_field: current,
             next_field: bitvec![0; width * height],
             game_rule: game_rule,
@@ -44,15 +46,21 @@ impl GameOfLife {
     fn check_cell_next_turn(&self, index: usize) -> bool {
         let (x, y) = self.get_x_y(index);
 
-        let neighbours: u8 = OFFSETS
+        let neighbours = OFFSETS
             .iter()
-            .map(|(dx, dy)| (x.wrapping_add_signed(*dx), y.wrapping_add_signed(*dy)))
-            .filter(|(nx, ny)| *nx < self.width && *ny < self.height)
-            .map(|(nx, ny)| self.current_field[self.get_index(nx, ny)] as u8)
-            .sum();
+            .filter_map(|(dx, dy)| {
+                let nx = x.wrapping_add_signed(*dx);
+                let ny = y.wrapping_add_signed(*dy);
+                if nx < self.width && ny < self.height {
+                    Some(self.current_field[self.get_index(nx, ny)] as u8)
+                } else {
+                    None
+                }
+            })
+            .sum::<u8>();
 
         self.game_rule
-            .may_survive(self.current_field[index], &neighbours)
+            .may_survive(self.current_field[index], neighbours)
     }
 
     pub fn next_turn(&mut self) {
@@ -67,7 +75,7 @@ impl GameOfLife {
     pub fn get_cell(&self, x: usize, y: usize) -> bool {
         let index = self.get_index(x, y);
 
-        return if index > self.height * self.width {
+        return if index >= self.total_cells {
             false
         } else {
             self.current_field[index]
@@ -77,7 +85,7 @@ impl GameOfLife {
     pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
         let index = self.get_index(x, y);
 
-        if index > self.height * self.width {
+        if index >= self.total_cells {
             return;
         }
 

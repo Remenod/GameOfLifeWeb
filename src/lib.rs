@@ -40,7 +40,7 @@ impl WasmGame {
         self.inner
             .get_field()
             .iter()
-            .map(|b| if b == true { '1' } else { '0' })
+            .map(|b| if *b { '1' } else { '0' })
             .collect()
     }
 }

@@ -17,7 +17,7 @@ impl GameRule {
         }
     }
 
-    pub fn may_survive(&self, current: bool, neighbours_count: &u8) -> bool {
+    pub fn may_survive(&self, current: bool, neighbours_count: u8) -> bool {
         if current {
             self.survive_rules.contains(&neighbours_count)
         } else {
