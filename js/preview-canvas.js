@@ -1,7 +1,7 @@
 import { parse_field } from "../pkg/game_of_life.js";
 import { updateImageRendering } from "./canvas.js";
 
-export const previewCanvas = document.getElementById("previewCanvas");
+const previewCanvas = document.getElementById("previewCanvas");
 const previewCtx = previewCanvas.getContext("2d");
 const previewCellSize = 5;
 
@@ -16,8 +16,9 @@ export function updatePreviewCanvas() {
 }
 
 function drawPreviewCanvas(text, width, height) {
-    previewCanvas.width = width * previewCellSize;
-    previewCanvas.height = height * previewCellSize;
+    const lineWidth = 1;
+    previewCanvas.width = width * previewCellSize + lineWidth;
+    previewCanvas.height = height * previewCellSize + lineWidth;
 
     previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
 
@@ -27,9 +28,22 @@ function drawPreviewCanvas(text, width, height) {
             const ch = idx < text.length ? text[idx] : '0';
             previewCtx.fillStyle = ch === '1' ? "black" : "white";
             previewCtx.fillRect(x * previewCellSize, y * previewCellSize, previewCellSize, previewCellSize);
-            previewCtx.strokeStyle = "#ccc";
-            previewCtx.strokeRect(x * previewCellSize, y * previewCellSize, previewCellSize, previewCellSize);
         }
+    }
+
+    previewCtx.strokeStyle = "#ddd";
+    previewCtx.lineWidth = lineWidth;
+    for (let x = 0; x <= width; x++) {
+        previewCtx.beginPath();
+        previewCtx.moveTo(x * previewCellSize + 0.5, 0);
+        previewCtx.lineTo(x * previewCellSize + 0.5, height * previewCellSize + lineWidth);
+        previewCtx.stroke();
+    }
+    for (let y = 0; y <= height; y++) {
+        previewCtx.beginPath();
+        previewCtx.moveTo(0, y * previewCellSize + 0.5);
+        previewCtx.lineTo(width * previewCellSize + lineWidth, y * previewCellSize + 0.5);
+        previewCtx.stroke();
     }
 
 }

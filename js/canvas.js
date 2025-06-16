@@ -25,8 +25,9 @@ export function clearGrid() {
 }
 
 export function drawGrid() {
-    canvas.width = width * cellSize;
-    canvas.height = height * cellSize;
+    const lineWidth = 1;
+    canvas.width = width * cellSize + lineWidth;
+    canvas.height = height * cellSize + lineWidth;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let y = 0; y < height; y++) {
@@ -43,13 +44,13 @@ export function drawGrid() {
     for (let x = 0; x <= width; x++) {
         ctx.beginPath();
         ctx.moveTo(x * cellSize + 0.5, 0);
-        ctx.lineTo(x * cellSize + 0.5, height * cellSize);
+        ctx.lineTo(x * cellSize + 0.5, height * cellSize + lineWidth);
         ctx.stroke();
     }
     for (let y = 0; y <= height; y++) {
         ctx.beginPath();
         ctx.moveTo(0, y * cellSize + 0.5);
-        ctx.lineTo(width * cellSize, y * cellSize + 0.5);
+        ctx.lineTo(width * cellSize + lineWidth, y * cellSize + 0.5);
         ctx.stroke();
     }
 }
