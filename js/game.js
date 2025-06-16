@@ -7,7 +7,7 @@ export let width, height;
 export let playing = false;
 let autoTickInterval = null;
 
-const ruleRegex = /^B[0-8]*\/S[0-8]*$/g;
+const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
 
 export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
     width = parseInt(widthInput);
