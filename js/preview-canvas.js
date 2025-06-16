@@ -1,12 +1,15 @@
 import { parse_field } from "../pkg/game_of_life.js";
+import { updateImageRendering } from "./canvas.js";
 
-const previewCanvas = document.getElementById("previewCanvas");
+export const previewCanvas = document.getElementById("previewCanvas");
 const previewCtx = previewCanvas.getContext("2d");
 const previewCellSize = 5;
 
 export function updatePreviewCanvas() {
     const w = parseInt(document.getElementById("widthInput").value, 10);
     const h = parseInt(document.getElementById("heightInput").value, 10);
+
+    updateImageRendering(previewCanvas, 10, w, h);
 
     const text = parse_field(document.getElementById("fieldInput").value, w);
     drawPreviewCanvas(text, w, h);

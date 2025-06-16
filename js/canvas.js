@@ -2,8 +2,8 @@ import { BoundedSetQueue } from "../pkg/game_of_life.js";
 import { togglePlay, height, width, game, playing } from "./game.js";
 
 const cellSize = 10;
-let canvas = document.getElementById("canvas");;
-let ctx = canvas.getContext("2d");
+const canvas = document.getElementById("canvas");;
+const ctx = canvas.getContext("2d");
 
 let isDragging = false;
 let toggledCells;
@@ -54,16 +54,14 @@ export function drawGrid() {
     }
 }
 
-export function updateImageRendering() {
-    const cellWidthPx = canvas.clientWidth / width;
-    const cellHeightPx = canvas.clientHeight / height;
-
-    const pixelatedThreshold = 25;
+export function updateImageRendering(canv = canvas, pixelatedThreshold = 25, w = width, h = height) {
+    const cellWidthPx = canv.clientWidth / w;
+    const cellHeightPx = canv.clientHeight / h;
 
     if (cellWidthPx >= pixelatedThreshold || cellHeightPx >= pixelatedThreshold) {
-        canvas.style.imageRendering = 'pixelated';
+        canv.style.imageRendering = 'pixelated';
     } else {
-        canvas.style.imageRendering = 'auto';
+        canv.style.imageRendering = 'auto';
     }
 }
 
