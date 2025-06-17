@@ -1,63 +1,75 @@
-import { BoundedSetQueue } from "../pkg/game_of_life.js";
-import { togglePlay, height, width, game, playing } from "./game.js";
+import { BoundedSetQueue, parse_field } from "../pkg/game_of_life.js";
+import { game } from "./game.js";
 
-const cellSize = 10;
 const canvas = document.getElementById("canvas");;
 const ctx = canvas.getContext("2d");
+const cellSize = 10;
+
+const previewCanvas = document.getElementById("previewCanvas");
+const previewCtx = previewCanvas.getContext("2d");
+const previewCellSize = 5;
+
+const lineWidth = 1;
 
 let isDragging = false;
 let toggledCells;
-
-export async function initToggledCells() {
+export async function initToggledCellsCollection() {
     toggledCells = new BoundedSetQueue(20);
 }
 
-export function clearGrid() {
-    if (playing) {
-        togglePlay();
-    }
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            game.set_cell(x, y, false);
-        }
-    }
-    drawGrid();
+export function drawCanvas() {
+    const width = game.get_width();
+    const height = game.get_height();
+
+    drawGenericCanvas(canvas, ctx, cellSize, width, height, 25, (x, y) => game.get_cell(x, y));
 }
 
-export function drawGrid() {
-    const lineWidth = 1;
-    canvas.width = width * cellSize + lineWidth;
-    canvas.height = height * cellSize + lineWidth;
+export function drawPreviewCanvas() {
+    const width = parseInt(document.getElementById("widthInput").value, 10);
+    const height = parseInt(document.getElementById("heightInput").value, 10);
+    const text = parse_field(document.getElementById("fieldInput").value.trim(), width);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGenericCanvas(previewCanvas, previewCtx, previewCellSize, width, height, 10, (x, y) => {
+        const idx = y * width + x;
+        return idx < text.length ? text[idx] === '1' : false;
+    });
+}
+
+function drawGenericCanvas(canv, canvCtx, cellSize, width, height, pixelatedThreshold, getData) {
+    updateImageRendering(canv, pixelatedThreshold, width, height);
+
+    canv.width = width * cellSize + lineWidth;
+    canv.height = height * cellSize + lineWidth;
+
+    canvCtx.clearRect(0, 0, canv.width, canv.height);
+
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            const alive = game.get_cell(x, y);
-            ctx.fillStyle = alive ? "black" : "white";
-            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+            canvCtx.fillStyle = getData(x, y) ? "black" : "white";
+            canvCtx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         }
     }
 
-    // grid lines
-    ctx.strokeStyle = "#ddd";
-    ctx.lineWidth = 1;
+    // lines
+    canvCtx.strokeStyle = "#ddd";
+    canvCtx.lineWidth = lineWidth;
     for (let x = 0; x <= width; x++) {
-        ctx.beginPath();
-        ctx.moveTo(x * cellSize + 0.5, 0);
-        ctx.lineTo(x * cellSize + 0.5, height * cellSize + lineWidth);
-        ctx.stroke();
+        canvCtx.beginPath();
+        canvCtx.moveTo(x * cellSize + 0.5, 0);
+        canvCtx.lineTo(x * cellSize + 0.5, height * cellSize + lineWidth);
+        canvCtx.stroke();
     }
     for (let y = 0; y <= height; y++) {
-        ctx.beginPath();
-        ctx.moveTo(0, y * cellSize + 0.5);
-        ctx.lineTo(width * cellSize + lineWidth, y * cellSize + 0.5);
-        ctx.stroke();
+        canvCtx.beginPath();
+        canvCtx.moveTo(0, y * cellSize + 0.5);
+        canvCtx.lineTo(width * cellSize + lineWidth, y * cellSize + 0.5);
+        canvCtx.stroke();
     }
 }
 
-export function updateImageRendering(canv = canvas, pixelatedThreshold = 25, w = width, h = height) {
-    const cellWidthPx = canv.clientWidth / w;
-    const cellHeightPx = canv.clientHeight / h;
+function updateImageRendering(canv = canvas, pixelatedThreshold, width, height) {
+    const cellWidthPx = canv.clientWidth / width;
+    const cellHeightPx = canv.clientHeight / height;
 
     if (cellWidthPx >= pixelatedThreshold || cellHeightPx >= pixelatedThreshold) {
         canv.style.imageRendering = 'pixelated';
@@ -92,11 +104,11 @@ function toggleCellAtEvent(event) {
     const { x, y } = getCanvasCoords(event);
 
     const key = `${x},${y}`;
-    if (x >= 0 && x < width && y >= 0 && y < height && !toggledCells.has(key)) {
+    if (x >= 0 && x < game.get_width() && y >= 0 && y < game.get_height() && !toggledCells.has(key)) {
         const alive = game.get_cell(x, y);
         game.set_cell(x, y, !alive);
         toggledCells.add(key);
-        drawGrid();
+        drawCanvas();
     }
 }
 
@@ -141,4 +153,3 @@ canvas.addEventListener("touchcancel", () => {
     isDragging = false;
     toggledCells.clear();
 });
-
