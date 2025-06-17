@@ -95,4 +95,12 @@ impl GameOfLife {
     pub fn get_field(&self) -> &BitVec {
         &self.current_field
     }
+
+    pub fn get_height(&self) -> usize {
+        self.height
+    }
+
+    pub fn get_width(&self) -> usize {
+        self.width
+    }
 }

@@ -43,6 +43,14 @@ impl WasmGame {
             .map(|b| if *b { '1' } else { '0' })
             .collect()
     }
+
+    pub fn get_height(&self) -> usize {
+        self.inner.get_height()
+    }
+
+    pub fn get_width(&self) -> usize {
+        self.inner.get_width()
+    }
 }
 
 fn to_radix62(mut num: u32) -> String {
