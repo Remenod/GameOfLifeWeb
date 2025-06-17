@@ -1,5 +1,5 @@
 import { updateUrlParams, showToast } from "./utils.js";
-import { updatePreviewCanvas } from "./preview-canvas.js";
+import { drawPreviewCanvas } from "./canvas.js";
 import { playing, togglePlay, runGame } from "./game.js";
 
 export function copyUrl() {
@@ -42,9 +42,9 @@ document.getElementById("pasteBtn").addEventListener("click", async () => {
     }
 });
 
-document.getElementById("fieldInput").addEventListener("input", () => { updatePreviewCanvas(), updateUrlParams() });
-document.getElementById("widthInput").addEventListener("input", () => { updatePreviewCanvas(), updateUrlParams() });
-document.getElementById("heightInput").addEventListener("input", () => { updatePreviewCanvas(), updateUrlParams() });
+document.getElementById("fieldInput").addEventListener("input", () => { drawPreviewCanvas(), updateUrlParams() });
+document.getElementById("widthInput").addEventListener("input", () => { drawPreviewCanvas(), updateUrlParams() });
+document.getElementById("heightInput").addEventListener("input", () => { drawPreviewCanvas(), updateUrlParams() });
 document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
 
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {

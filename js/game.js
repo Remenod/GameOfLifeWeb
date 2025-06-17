@@ -1,15 +1,18 @@
 import { showToast } from "./utils.js";
-import { drawGrid, updateImageRendering } from "./canvas.js";
+import { drawCanvas } from "./canvas.js";
 import { WasmGame, parse_field, encode_field } from "../pkg/game_of_life.js";
 
 export let game;
-export let width, height;
 export let playing = false;
+let width, height;
 let autoTickInterval = null;
 
 const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
 
 export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
+
+    console.log(widthInput);
+    console.log(heightInput);
     width = parseInt(widthInput);
     height = parseInt(heightInput);
     const rule = ruleInput.trim();
@@ -32,8 +35,7 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
     }
 
     game = new WasmGame(width, height, field, rule);
-    drawGrid();
-    updateImageRendering();
+    drawCanvas();
 
     document.querySelectorAll('.controls.card button, .controls.card input')
         .forEach(el => el.disabled = false);
@@ -59,6 +61,18 @@ export function togglePlay(disableTickBtn = true) {
     }
     if (disableTickBtn)
         document.getElementById('tickBtn').disabled = playing;
+}
+
+export function clearGrid() {
+    if (playing) {
+        togglePlay();
+    }
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            game.set_cell(x, y, false);
+        }
+    }
+    drawCanvas();
 }
 
 function copyField(version, encoder = null) {
@@ -87,7 +101,7 @@ export function copyField_v3() {
 
 export function tick() {
     game.tick();
-    drawGrid();
+    drawCanvas();
 }
 
 document.getElementById("tps").addEventListener("input", () => {

@@ -278,6 +278,20 @@ export class WasmGame {
             wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
         }
     }
+    /**
+     * @returns {number}
+     */
+    get_height() {
+        const ret = wasm.wasmgame_get_height(this.__wbg_ptr);
+        return ret >>> 0;
+    }
+    /**
+     * @returns {number}
+     */
+    get_width() {
+        const ret = wasm.wasmgame_get_width(this.__wbg_ptr);
+        return ret >>> 0;
+    }
 }
 
 async function __wbg_load(module, imports) {

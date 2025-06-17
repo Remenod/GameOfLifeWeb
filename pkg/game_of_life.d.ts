@@ -18,6 +18,8 @@ export class WasmGame {
   get_cell(x: number, y: number): boolean;
   set_cell(x: number, y: number, value: boolean): void;
   export_field(): string;
+  get_height(): number;
+  get_width(): number;
 }
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
@@ -30,6 +32,8 @@ export interface InitOutput {
   readonly wasmgame_get_cell: (a: number, b: number, c: number) => number;
   readonly wasmgame_set_cell: (a: number, b: number, c: number, d: number) => void;
   readonly wasmgame_export_field: (a: number) => [number, number];
+  readonly wasmgame_get_height: (a: number) => number;
+  readonly wasmgame_get_width: (a: number) => number;
   readonly encode_field: (a: number, b: number, c: number) => [number, number];
   readonly decode_field: (a: number, b: number, c: number) => [number, number];
   readonly adapt_field_width: (a: number, b: number, c: number, d: number) => [number, number];
