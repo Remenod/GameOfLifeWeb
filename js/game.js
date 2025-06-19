@@ -9,10 +9,8 @@ let autoTickInterval = null;
 
 const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
 
-export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
+export async function runGame(widthInput, heightInput, ruleInput, fieldInput, neighboursRuleInput = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1]) {
 
-    console.log(widthInput);
-    console.log(heightInput);
     width = parseInt(widthInput);
     height = parseInt(heightInput);
     const rule = ruleInput.trim();
@@ -26,15 +24,17 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput) {
         return;
     }
 
-    const text = parse_field(fieldInput, width);
+    const targetLength = width * height;
+    let field = parse_field(fieldInput, width);
 
-    let field = new Uint8Array(width * height);
-    for (let i = 0; i < field.length; i++) {
-        const ch = text[i];
-        field[i] = ch === "1" ? 1 : 0;
+    if (field.length > targetLength) {
+        field = field.slice(0, targetLength);
+    }
+    else if (field.length < targetLength) {
+        field = new Uint8Array(targetLength).set(field);
     }
 
-    game = new WasmGame(width, height, field, rule);
+    game = new WasmGame(width, height, field, rule, neighboursRuleInput);
     drawCanvas();
 
     document.querySelectorAll('.controls.card button, .controls.card input')

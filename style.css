@@ -143,6 +143,33 @@ button:disabled {
     align-items: center;
 }
 
+#neighborMaskSelector {
+    display: grid;
+    grid-template-columns: repeat(5, 15px);
+    grid-template-rows: repeat(5, 15px);
+    gap: 0;
+    width: 75px;
+    height: 75px;
+}
+
+#neighborMaskSelector>div {
+    background: white;
+    width: 15px;
+    height: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+.mask-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    width: 100%;
+}
+
+
+
 #canvas {
     width: 100%;
     height: auto;

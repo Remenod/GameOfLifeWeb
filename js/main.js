@@ -1,5 +1,5 @@
 import init from "../pkg/game_of_life.js";
-import { copyUrl } from "./form.js";
+import { copyUrl, resetNeighborMask } from "./form.js";
 import { loadFromUrlParams } from "./utils.js";
 import { initToggledCellsCollection, drawPreviewCanvas } from "./canvas.js";
 import { enforceDisabledControls, resetElementValue } from "./utils.js";
@@ -14,6 +14,7 @@ window.copyField_v2 = copyField_v2;
 window.copyField_v3 = copyField_v3;
 window.copyUrl = copyUrl;
 window.togglePlay = togglePlay;
+window.resetNeighborMask = resetNeighborMask;
 window.clearGrid = clearGrid;
 window.resetElementValue = resetElementValue;
 

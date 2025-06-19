@@ -15,6 +15,15 @@ export function copyUrl() {
         });
 }
 
+const cells = document.querySelectorAll("#neighborMaskSelector > div");
+const blackIndices = [6, 7, 8, 11, 13, 16, 17, 18];
+
+export function resetNeighborMask() {
+    cells.forEach((cell, index) => {
+        cell.style.background = blackIndices.includes(index) ? "black" : "white";
+    });
+}
+
 document.getElementById("pasteBtn").addEventListener("click", async () => {
     try {
         const rawText = await navigator.clipboard.readText();
@@ -57,8 +66,21 @@ document.getElementById("settingsForm").addEventListener("submit", async (e) => 
     const widthInput = document.getElementById("widthInput").value;
     const heightInput = document.getElementById("heightInput").value;
     const ruleInput = document.getElementById("ruleInput").value;
-    const fieldInput = document.getElementById("fieldInput").value || "";
+    const fieldInput = document.getElementById("fieldInput").value;
 
-    await runGame(widthInput, heightInput, ruleInput, fieldInput);
+    const mask = new Uint8Array(cells.length);
+
+    cells.forEach((cell, i) => {
+        const color = getComputedStyle(cell).backgroundColor;
+        mask[i] = (color === "rgb(0, 0, 0)") ? 1 : 0;
+    });
+
+    await runGame(widthInput, heightInput, ruleInput, fieldInput, mask);
 });
 
+cells.forEach(cell => {
+    cell.addEventListener("click", () => {
+        const color = getComputedStyle(cell).backgroundColor;
+        cell.style.backgroundColor = (color === "rgb(0, 0, 0)") ? "white" : "black";
+    });
+});

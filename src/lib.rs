@@ -13,13 +13,20 @@ pub struct WasmGame {
 #[wasm_bindgen]
 impl WasmGame {
     #[wasm_bindgen(constructor)]
-    pub fn new(width: usize, height: usize, field: Vec<u8>, rule: &str) -> WasmGame {
+    pub fn new(
+        width: usize,
+        height: usize,
+        field: Vec<u8>,
+        rule: &str,
+        check_rule: &[u8],
+    ) -> WasmGame {
         WasmGame {
             inner: GameOfLife::new(
                 width,
                 height,
                 field.into_iter().map(|b| b != 0).collect(),
                 rule.try_into().unwrap_or_default(),
+                check_rule,
             ),
         }
     }
@@ -195,7 +202,7 @@ pub fn adapt_field_width(matrix_str: &str, old_width: usize, new_width: usize) -
 }
 
 #[wasm_bindgen]
-pub fn parse_field(input: &str, current_width: usize) -> String {
+pub fn parse_field(input: &str, current_width: usize) -> Vec<u8> {
     let input = input.trim();
 
     let header_owned;
@@ -226,8 +233,20 @@ pub fn parse_field(input: &str, current_width: usize) -> String {
 
     if current_width == width {
         decoded
+            .chars()
+            .map(|c| match c {
+                '0' => 0,
+                _ => 1,
+            })
+            .collect()
     } else {
         adapt_field_width(&decoded, width, current_width)
+            .chars()
+            .map(|c| match c {
+                '0' => 0,
+                _ => 1,
+            })
+            .collect()
     }
 }
 

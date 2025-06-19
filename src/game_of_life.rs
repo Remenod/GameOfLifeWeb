@@ -1,17 +1,6 @@
 use crate::game_rule::GameRule;
 use bitvec::prelude::*;
 
-const OFFSETS: [(isize, isize); 8] = [
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-    (0, -1),
-    (0, 1),
-    (1, -1),
-    (1, 0),
-    (1, 1),
-];
-
 pub struct GameOfLife {
     width: usize,
     height: usize,
@@ -19,10 +8,17 @@ pub struct GameOfLife {
     current_field: BitVec,
     next_field: BitVec,
     game_rule: GameRule,
+    offsets: Vec<(i8, i8)>,
 }
 
 impl GameOfLife {
-    pub fn new(width: usize, height: usize, current: BitVec, game_rule: GameRule) -> GameOfLife {
+    pub fn new(
+        width: usize,
+        height: usize,
+        current: BitVec,
+        game_rule: GameRule,
+        check_rule: &[u8],
+    ) -> GameOfLife {
         GameOfLife {
             width: width,
             height: height,
@@ -30,6 +26,7 @@ impl GameOfLife {
             current_field: current,
             next_field: bitvec![0; width * height],
             game_rule: game_rule,
+            offsets: GameRule::get_offsets(check_rule),
         }
     }
 
@@ -46,11 +43,12 @@ impl GameOfLife {
     fn check_cell_next_turn(&self, index: usize) -> bool {
         let (x, y) = self.get_x_y(index);
 
-        let neighbours = OFFSETS
+        let neighbours = self
+            .offsets
             .iter()
             .filter_map(|(dx, dy)| {
-                let nx = x.wrapping_add_signed(*dx);
-                let ny = y.wrapping_add_signed(*dy);
+                let nx = x.wrapping_add_signed(*dx as isize);
+                let ny = y.wrapping_add_signed(*dy as isize);
                 if nx < self.width && ny < self.height {
                     Some(self.current_field[self.get_index(nx, ny)] as u8)
                 } else {
