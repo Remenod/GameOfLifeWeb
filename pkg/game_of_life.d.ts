@@ -3,7 +3,7 @@
 export function encode_field(decoded: string, v3mode: boolean): string;
 export function decode_field(encoded: string, v3mode: boolean): string;
 export function adapt_field_width(matrix_str: string, old_width: number, new_width: number): string;
-export function parse_field(input: string, current_width: number): string;
+export function parse_field(input: string, current_width: number): Uint8Array;
 export class BoundedSetQueue {
   free(): void;
   constructor(limit: number);
@@ -13,7 +13,7 @@ export class BoundedSetQueue {
 }
 export class WasmGame {
   free(): void;
-  constructor(width: number, height: number, field: Uint8Array, rule: string);
+  constructor(width: number, height: number, field: Uint8Array, rule: string, check_rule: Uint8Array);
   tick(): void;
   get_cell(x: number, y: number): boolean;
   set_cell(x: number, y: number, value: boolean): void;
@@ -27,7 +27,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_wasmgame_free: (a: number, b: number) => void;
-  readonly wasmgame_new: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
+  readonly wasmgame_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => number;
   readonly wasmgame_tick: (a: number) => void;
   readonly wasmgame_get_cell: (a: number, b: number, c: number) => number;
   readonly wasmgame_set_cell: (a: number, b: number, c: number, d: number) => void;

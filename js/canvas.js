@@ -27,11 +27,11 @@ export function drawCanvas() {
 export function drawPreviewCanvas() {
     const width = parseInt(document.getElementById("widthInput").value, 10);
     const height = parseInt(document.getElementById("heightInput").value, 10);
-    const text = parse_field(document.getElementById("fieldInput").value.trim(), width);
+    const fld = parse_field(document.getElementById("fieldInput").value.trim(), width);
 
     drawGenericCanvas(previewCanvas, previewCtx, previewCellSize, width, height, 10, (x, y) => {
         const idx = y * width + x;
-        return idx < text.length ? text[idx] === '1' : false;
+        return idx < fld.length ? fld[idx] === 1 : false;
     });
 }
 

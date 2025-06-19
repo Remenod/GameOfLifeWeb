@@ -2,7 +2,7 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export const __wbg_wasmgame_free: (a: number, b: number) => void;
-export const wasmgame_new: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
+export const wasmgame_new: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => number;
 export const wasmgame_tick: (a: number) => void;
 export const wasmgame_get_cell: (a: number, b: number, c: number) => number;
 export const wasmgame_set_cell: (a: number, b: number, c: number, d: number) => void;

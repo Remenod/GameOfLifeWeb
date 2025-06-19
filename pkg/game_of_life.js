@@ -141,24 +141,22 @@ export function adapt_field_width(matrix_str, old_width, new_width) {
     }
 }
 
+function getArrayU8FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
+}
 /**
  * @param {string} input
  * @param {number} current_width
- * @returns {string}
+ * @returns {Uint8Array}
  */
 export function parse_field(input, current_width) {
-    let deferred2_0;
-    let deferred2_1;
-    try {
-        const ptr0 = passStringToWasm0(input, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-        const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.parse_field(ptr0, len0, current_width);
-        deferred2_0 = ret[0];
-        deferred2_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
-    } finally {
-        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
-    }
+    const ptr0 = passStringToWasm0(input, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parse_field(ptr0, len0, current_width);
+    var v2 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    return v2;
 }
 
 const BoundedSetQueueFinalization = (typeof FinalizationRegistry === 'undefined')
@@ -232,13 +230,16 @@ export class WasmGame {
      * @param {number} height
      * @param {Uint8Array} field
      * @param {string} rule
+     * @param {Uint8Array} check_rule
      */
-    constructor(width, height, field, rule) {
+    constructor(width, height, field, rule, check_rule) {
         const ptr0 = passArray8ToWasm0(field, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
         const ptr1 = passStringToWasm0(rule, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
-        const ret = wasm.wasmgame_new(width, height, ptr0, len0, ptr1, len1);
+        const ptr2 = passArray8ToWasm0(check_rule, wasm.__wbindgen_malloc);
+        const len2 = WASM_VECTOR_LEN;
+        const ret = wasm.wasmgame_new(width, height, ptr0, len0, ptr1, len1, ptr2, len2);
         this.__wbg_ptr = ret >>> 0;
         WasmGameFinalization.register(this, this.__wbg_ptr, this);
         return this;
