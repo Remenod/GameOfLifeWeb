@@ -5,8 +5,8 @@ pub struct GameOfLife {
     width: usize,
     height: usize,
     total_cells: usize,
-    current_field: BitVec,
-    next_field: BitVec,
+    current_field: BitVec<u8, Lsb0>,
+    next_field: BitVec<u8, Lsb0>,
     game_rule: GameRule,
     offsets: Vec<(i8, i8)>,
 }
@@ -15,16 +15,23 @@ impl GameOfLife {
     pub fn new(
         width: usize,
         height: usize,
-        current: BitVec,
+        mut current: Vec<u8>,
         game_rule: GameRule,
         check_rule: &[u8],
     ) -> GameOfLife {
+        let target_len = height * width;
+        current.truncate(target_len);
+
+        if current.len() < target_len {
+            current.resize(target_len, 0);
+        }
+
         GameOfLife {
             width: width,
             height: height,
-            total_cells: height * width,
-            current_field: current,
-            next_field: bitvec![0; width * height],
+            total_cells: target_len,
+            current_field: BitVec::from_vec(current),
+            next_field: bitvec![u8, Lsb0; 0; width * height],
             game_rule: game_rule,
             offsets: GameRule::get_offsets(check_rule),
         }
@@ -90,7 +97,7 @@ impl GameOfLife {
         self.current_field.set(index, value);
     }
 
-    pub fn get_field(&self) -> &BitVec {
+    pub fn get_field(&self) -> &BitVec<u8, Lsb0> {
         &self.current_field
     }
 

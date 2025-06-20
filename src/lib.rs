@@ -24,7 +24,7 @@ impl WasmGame {
             inner: GameOfLife::new(
                 width,
                 height,
-                field.into_iter().map(|b| b != 0).collect(),
+                field,
                 rule.try_into().unwrap_or_default(),
                 check_rule,
             ),

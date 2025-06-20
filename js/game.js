@@ -24,17 +24,7 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
         return;
     }
 
-    const targetLength = width * height;
-    let field = parse_field(fieldInput, width);
-
-    if (field.length > targetLength) {
-        field = field.slice(0, targetLength);
-    }
-    else if (field.length < targetLength) {
-        field = new Uint8Array(targetLength).set(field);
-    }
-
-    game = new WasmGame(width, height, field, rule, neighboursRuleInput);
+    game = new WasmGame(width, height, parse_field(fieldInput, width), rule, neighboursRuleInput);
     drawCanvas();
 
     document.querySelectorAll('.controls.card button, .controls.card input')
