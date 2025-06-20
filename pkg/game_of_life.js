@@ -259,7 +259,7 @@ export class WasmGame {
     /**
      * @param {number} x
      * @param {number} y
-     * @param {boolean} value
+     * @param {number} value
      */
     set_cell(x, y, value) {
         wasm.wasmgame_set_cell(this.__wbg_ptr, x, y, value);
