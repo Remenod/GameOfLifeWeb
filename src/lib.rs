@@ -39,16 +39,17 @@ impl WasmGame {
         self.inner.get_cell(x, y)
     }
 
-    pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
+    pub fn set_cell(&mut self, x: usize, y: usize, value: u8) {
         self.inner.set_cell(x, y, value);
     }
 
     pub fn export_field(&self) -> String {
-        self.inner
-            .get_field()
-            .iter()
-            .map(|b| if *b { '1' } else { '0' })
-            .collect()
+        let bits = self.inner.get_field();
+        let mut s = String::with_capacity(bits.len());
+        for &b in bits {
+            s.push(if b != 0 { '1' } else { '0' });
+        }
+        s
     }
 
     pub fn get_height(&self) -> usize {

@@ -1,12 +1,11 @@
 use crate::game_rule::GameRule;
-use bitvec::prelude::*;
 
 pub struct GameOfLife {
     width: usize,
     height: usize,
     total_cells: usize,
-    current_field: BitVec<u8, Lsb0>,
-    next_field: BitVec<u8, Lsb0>,
+    current_field: Vec<u8>,
+    next_field: Vec<u8>,
     game_rule: GameRule,
     offsets: Vec<(i8, i8)>,
 }
@@ -20,6 +19,7 @@ impl GameOfLife {
         check_rule: &[u8],
     ) -> GameOfLife {
         let target_len = height * width;
+
         current.truncate(target_len);
 
         if current.len() < target_len {
@@ -30,8 +30,8 @@ impl GameOfLife {
             width: width,
             height: height,
             total_cells: target_len,
-            current_field: BitVec::from_vec(current),
-            next_field: bitvec![u8, Lsb0; 0; width * height],
+            current_field: current,
+            next_field: vec![0; width * height],
             game_rule: game_rule,
             offsets: GameRule::get_offsets(check_rule),
         }
@@ -65,13 +65,13 @@ impl GameOfLife {
             .sum::<u8>();
 
         self.game_rule
-            .may_survive(self.current_field[index], neighbours)
+            .may_survive(self.current_field[index] != 0, neighbours)
     }
 
     pub fn next_turn(&mut self) {
         for i in 0..(self.height * self.width) {
             let v = self.check_cell_next_turn(i);
-            self.next_field.set(i, v);
+            self.next_field[i] = v as u8;
         }
 
         std::mem::swap(&mut self.current_field, &mut self.next_field);
@@ -83,21 +83,21 @@ impl GameOfLife {
         return if index >= self.total_cells {
             false
         } else {
-            self.current_field[index]
+            self.current_field[index] != 0
         };
     }
 
-    pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
+    pub fn set_cell(&mut self, x: usize, y: usize, value: u8) {
         let index = self.get_index(x, y);
 
         if index >= self.total_cells {
             return;
         }
 
-        self.current_field.set(index, value);
+        self.current_field[index] = value;
     }
 
-    pub fn get_field(&self) -> &BitVec<u8, Lsb0> {
+    pub fn get_field(&self) -> &Vec<u8> {
         &self.current_field
     }
 
