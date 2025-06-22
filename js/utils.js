@@ -64,7 +64,7 @@ export function resetElementValue(elementId, defaultValue = "") {
 
 }
 
-let helpContent = await loadHelpContent(['width', 'rule', 'height', 'mask']);
+let helpContent = await loadHelpContent();
 
 export function openHelp(key, trigger) {
     const data = helpContent[key];
@@ -109,13 +109,15 @@ function closeHelp() {
     document.removeEventListener("click", closeHelp);
 }
 
-async function loadHelpContent(keys) {
+async function loadHelpContent() {
     const helpContent = {};
+    const response = await fetch(`help/index.json?nocache=${Date.now()}`);
+    const keys = await response.json();
+
     for (const key of keys) {
-        const response = await fetch(`help/${key}.md?nocache=${Date.now()}`);
-        const mdText = await response.text();
+        const mdRes = await fetch(`help/${key}.md?nocache=${Date.now()}`);
+        const mdText = await mdRes.text();
         helpContent[key] = parseMarkdownHelp(mdText);
-        console.log(helpContent[key]);
     }
     return helpContent;
 }
@@ -138,4 +140,3 @@ function parseMarkdownHelp(md) {
 
     return { type, html };
 }
-
