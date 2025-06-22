@@ -10,12 +10,15 @@
 </head>
 
 <body>
+    <script type="module" src="js/main.js"></script>
     <div class="container">
         <h1>Game of Life</h1>
-
         <form id="settingsForm" class="card">
             <div class="form-group">
-                <label>Width</label>
+                <label>
+                    Width
+                    <button type="button" class="info-small" onclick="openHelp('width', this)">ℹ️</button>
+                </label>
                 <div class="input-with-button">
                     <input type="number" id="widthInput" value="100" min="1" max="10000" required />
                     <button type="button" onclick="resetElementValue('widthInput',100)">Reset</button>
@@ -23,7 +26,10 @@
             </div>
 
             <div class="form-group">
-                <label>Height</label>
+                <label>
+                    Height
+                    <button type="button" class="info-small" onclick="openHelp('height', this)">ℹ️</button>
+                </label>
                 <div class="input-with-button">
                     <input type="number" id="heightInput" value="100" min="1" max="10000" required />
                     <button type="button" onclick="resetElementValue('heightInput',100)">Reset</button>
@@ -31,7 +37,10 @@
             </div>
 
             <div class="form-group">
-                <label>Rule</label>
+                <label>
+                    Rule
+                    <button type="button" class="info-small" onclick="openHelp('rule', this)">ℹ️</button>
+                </label>
                 <div class="input-with-button">
                     <input type="text" id="ruleInput" value="B3/S23" required />
                     <button type="button" onclick="resetElementValue('ruleInput','B3/S23')">Reset</button>
@@ -115,8 +124,6 @@
 
         <canvas id="canvas"></canvas>
     </div>
-
-    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

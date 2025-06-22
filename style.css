@@ -212,3 +212,114 @@ button:disabled {
 .toast-message.show {
     opacity: 1;
 }
+
+
+.label-with-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.info-small {
+    font-size: 0.85em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    padding: 0;
+}
+
+.tooltip-box {
+    position: absolute;
+    background-color: #222;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    max-width: 240px;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    transform: translateY(-8px);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content button.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.markdown-content {
+    overflow-y: auto;
+    flex-grow: 1;
+    max-height: 65vh;
+    padding-right: 0.5em;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #888;
+    padding: 2px 6px;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+.markdown-content ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+    margin-bottom: 1em;
+}
+
+.markdown-content li {
+    margin-bottom: 0.4em;
+}
+
+.markdown-content img {
+    max-width: 50%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1.5em 0;
+}

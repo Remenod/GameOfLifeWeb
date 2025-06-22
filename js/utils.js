@@ -1,3 +1,5 @@
+import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm';
+
 export function updateUrlParams() {
     const width = document.getElementById("widthInput").value;
     const height = document.getElementById("heightInput").value;
@@ -61,3 +63,79 @@ export function resetElementValue(elementId, defaultValue = "") {
     }
 
 }
+
+let helpContent = await loadHelpContent(['width', 'rule', 'height']);
+
+export function openHelp(key, trigger) {
+    const data = helpContent[key];
+    if (!data) return;
+    closeHelp();
+
+    if (data.type === "tooltip") {
+        const tooltip = document.createElement("div");
+        tooltip.className = "tooltip-box";
+        tooltip.innerHTML = data.html;
+        document.body.appendChild(tooltip);
+
+        const rect = trigger.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + window.scrollX}px`;
+        tooltip.style.top = `${rect.bottom + 6 + window.scrollY}px`;
+
+        trigger._tooltip = tooltip;
+
+        setTimeout(() => { document.addEventListener("click", closeHelp); }, 0);
+    }
+
+    if (data.type === "modal") {
+        const overlay = document.createElement("div");
+        overlay.className = "modal-overlay";
+        overlay.innerHTML = `
+            <div class="modal-content">
+                <button class="close-btn" id="close-modal">×</button>
+                <div id="helpContentContainer" class="markdown-content">
+                ${data.html}
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById("close-modal").addEventListener("click", closeHelp);
+
+        setTimeout(() => { document.addEventListener("click", closeHelp); }, 0);
+    }
+}
+
+function closeHelp() {
+    document.querySelectorAll(".tooltip-box").forEach(e => e.remove());
+    document.querySelectorAll(".modal-overlay").forEach(e => e.remove());
+    document.removeEventListener("click", closeHelp);
+}
+
+async function loadHelpContent(keys) {
+    const helpContent = {};
+    for (const key of keys) {
+        const response = await fetch(`help/${key}.md?nocache=${Date.now()}`);
+        const mdText = await response.text();
+        helpContent[key] = parseMarkdownHelp(mdText);
+        console.log(helpContent[key]);
+    }
+    return helpContent;
+}
+
+function parseMarkdownHelp(md) {
+    const lines = md.trim().split('\n');
+    let type = 'modal'; // default
+    let contentStart = 0;
+
+    for (let i = 0; i < 3; i++) {
+        if (lines[i]?.startsWith('type:')) {
+            type = lines[i].split(':')[1].trim();
+            contentStart = i + 1;
+            break;
+        }
+    }
+
+    const markdownBody = lines.slice(contentStart).join('\n');
+    const html = marked.parse(markdownBody);
+
+    return { type, html };
+}
+
