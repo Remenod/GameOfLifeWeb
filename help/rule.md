@@ -3,6 +3,8 @@ type: modal
 
 The rule format `B/S` (where **B** stands for *birth* and **S** for *survival*) defines how cells live and die.
 
+---
+
 #### Examples
 
 **`B3/S23`** means:
