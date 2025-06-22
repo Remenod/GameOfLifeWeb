@@ -64,7 +64,7 @@ export function resetElementValue(elementId, defaultValue = "") {
 
 }
 
-let helpContent = await loadHelpContent(['width', 'rule', 'height']);
+let helpContent = await loadHelpContent(['width', 'rule', 'height', 'mask']);
 
 export function openHelp(key, trigger) {
     const data = helpContent[key];
