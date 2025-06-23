@@ -54,7 +54,7 @@ export function togglePlay(disableTickBtn = true) {
         document.getElementById('tickBtn').disabled = playing;
 }
 
-export function clearGrid() {
+function clearGrid() {
     if (playing) {
         togglePlay();
     }
@@ -63,6 +63,11 @@ export function clearGrid() {
             game.set_cell(x, y, false);
         }
     }
+    drawCanvas();
+}
+
+function tick() {
+    game.tick();
     drawCanvas();
 }
 
@@ -78,22 +83,13 @@ function copyField(version, encoder = null) {
         .catch(err => console.error("A copying error:", err));
 }
 
-export function copyField_v1() {
-    copyField("v1");
-}
+document.getElementById("v1copyBtn").addEventListener("click", () => copyField("v1"))
+document.getElementById("v2copyBtn").addEventListener("click", () => copyField("v2", f => encode_field(f, false)))
+document.getElementById("v3copyBtn").addEventListener("click", () => copyField("v3", f => encode_field(f, true)))
 
-export function copyField_v2() {
-    copyField("v2", f => encode_field(f, false));
-}
-
-export function copyField_v3() {
-    copyField("v3", f => encode_field(f, true));
-}
-
-export function tick() {
-    game.tick();
-    drawCanvas();
-}
+document.getElementById("tickBtn").addEventListener("click", tick)
+document.getElementById("clearBtn").addEventListener("click", clearGrid)
+document.getElementById("playPauseBtn").addEventListener("click", togglePlay)
 
 document.getElementById("tps").addEventListener("input", () => {
     if (playing) {
