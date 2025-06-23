@@ -57,6 +57,7 @@ document.getElementById("heightInput").addEventListener("input", () => { drawPre
 document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
 
 document.getElementById("copyUrl").addEventListener("click", copyUrl);
+document.getElementById("resetNeighborMask").addEventListener("click", resetNeighborMask);
 
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
     e.preventDefault();
