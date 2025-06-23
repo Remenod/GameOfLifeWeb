@@ -1,5 +1,5 @@
 import { drawPreviewCanvas } from "./canvas.js";
-import { updateUrlParams, showToast } from "./utils.js";
+import { updateUrlParams, showToast, resetElementValue } from "./utils.js";
 import { playing, togglePlay, runGame } from "./game.js";
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm';
 
@@ -24,7 +24,6 @@ function resetNeighborMask() {
         cell.style.background = blackIndices.includes(index) ? "black" : "white";
     });
 }
-
 
 const helpContent = await loadHelpContent();
 
@@ -175,6 +174,12 @@ document.getElementById("settingsForm").addEventListener("submit", async (e) => 
 document.querySelectorAll(".info-small").forEach(btn => {
     btn.addEventListener("click", () => {
         openHelp(btn.dataset.type, btn);
+    });
+});
+
+document.querySelectorAll(".resetBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        resetElementValue(btn.dataset.element, btn.dataset.default);
     });
 });
 
