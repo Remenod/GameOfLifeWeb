@@ -1,0 +1,16 @@
+#canvas {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    margin-top: 16px;
+    display: block;
+    image-rendering: pixelated;
+}
+
+#previewCanvas {
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    image-rendering: pixelated;
+}
