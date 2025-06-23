@@ -1,5 +1,5 @@
 import { showToast } from "./utils.js";
-import { drawCanvas } from "./canvas.js";
+import { drawCanvas, addCanvasListeners } from "./canvas.js";
 import { WasmGame, parse_field, encode_field } from "../pkg/game_of_life.js";
 
 export let game;
@@ -26,6 +26,7 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
 
     game = new WasmGame(width, height, parse_field(fieldInput, width), rule, neighboursRuleInput);
     drawCanvas();
+    addCanvasListeners();
 
     document.querySelectorAll('.controls.card button, .controls.card input')
         .forEach(el => el.disabled = false);
