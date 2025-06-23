@@ -1,6 +1,6 @@
 use once_cell::sync::Lazy;
 use regex::Regex;
-use std::collections::HashSet;
+use std::{cmp::min, collections::HashSet};
 
 static RULE_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^B[0-8]*/S[0-8]*$").unwrap());
 
@@ -18,10 +18,11 @@ impl GameRule {
     }
 
     pub fn may_survive(&self, current: bool, neighbours_count: u8) -> bool {
+        let normalized_neighbours_count = min(neighbours_count, 9);
         if current {
-            self.survive_rules.contains(&neighbours_count)
+            self.survive_rules.contains(&normalized_neighbours_count)
         } else {
-            self.birth_rules.contains(&neighbours_count)
+            self.birth_rules.contains(&normalized_neighbours_count)
         }
     }
 

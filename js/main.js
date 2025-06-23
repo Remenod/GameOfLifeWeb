@@ -2,7 +2,7 @@ import init from "../pkg/game_of_life.js";
 import { copyUrl, resetNeighborMask } from "./form.js";
 import { loadFromUrlParams } from "./utils.js";
 import { initToggledCellsCollection, drawPreviewCanvas } from "./canvas.js";
-import { enforceDisabledControls, resetElementValue } from "./utils.js";
+import { enforceDisabledControls, resetElementValue, openHelp } from "./utils.js";
 import { togglePlay, copyField_v1, copyField_v2, copyField_v3, tick, clearGrid } from "./game.js";
 
 enforceDisabledControls();
@@ -17,6 +17,7 @@ window.togglePlay = togglePlay;
 window.resetNeighborMask = resetNeighborMask;
 window.clearGrid = clearGrid;
 window.resetElementValue = resetElementValue;
+window.openHelp = openHelp;
 
 await init().then(() => {
     drawPreviewCanvas();
