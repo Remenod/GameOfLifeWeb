@@ -25,3 +25,10 @@ Below is an illustration showing how a cell with 3 live neighbors is born:
 
 You can see the center cell (empty) surrounded by **exactly** 3 live neighbors (black).  
 With rule `B3`, it becomes alive in the next generation.
+
+---
+
+### Note
+
+If the number of neighbors exceeds 8, it is capped at 9 internally.  
+This means that `B9` or `S9` can be used to represent any case where a cell has **more than 8 neighbors**.
