@@ -98,6 +98,7 @@ export function openHelp(key, trigger) {
             </div>`;
         document.body.appendChild(overlay);
         document.getElementById("close-modal").addEventListener("click", closeHelp);
+        document.body.style.overflow = 'hidden';
 
         setTimeout(() => { document.addEventListener("click", closeHelp); }, 0);
     }
@@ -107,6 +108,7 @@ function closeHelp() {
     document.querySelectorAll(".tooltip-box").forEach(e => e.remove());
     document.querySelectorAll(".modal-overlay").forEach(e => e.remove());
     document.removeEventListener("click", closeHelp);
+    document.body.style.overflow = '';
 }
 
 async function loadHelpContent() {
