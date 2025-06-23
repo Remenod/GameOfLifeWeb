@@ -3,16 +3,12 @@ import { copyUrl, resetNeighborMask } from "./form.js";
 import { loadFromUrlParams } from "./utils.js";
 import { initToggledCellsCollection, drawPreviewCanvas } from "./canvas.js";
 import { enforceDisabledControls, resetElementValue, openHelp } from "./utils.js";
-import { togglePlay, tick, clearGrid } from "./game.js";
 
 enforceDisabledControls();
 loadFromUrlParams();
 
-window.tick = tick;
 window.copyUrl = copyUrl;
-window.togglePlay = togglePlay;
 window.resetNeighborMask = resetNeighborMask;
-window.clearGrid = clearGrid;
 window.resetElementValue = resetElementValue;
 window.openHelp = openHelp;
 

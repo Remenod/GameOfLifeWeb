@@ -87,6 +87,10 @@ document.getElementById("v1copyBtn").addEventListener("click", () => copyField("
 document.getElementById("v2copyBtn").addEventListener("click", () => copyField("v2", f => encode_field(f, false)))
 document.getElementById("v3copyBtn").addEventListener("click", () => copyField("v3", f => encode_field(f, true)))
 
+document.getElementById("tickBtn").addEventListener("click", tick)
+document.getElementById("clearBtn").addEventListener("click", clearGrid)
+document.getElementById("playPauseBtn").addEventListener("click", togglePlay)
+
 document.getElementById("tps").addEventListener("input", () => {
     if (playing) {
         togglePlay(false);
