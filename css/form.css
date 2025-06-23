@@ -1,0 +1,94 @@
+.input-with-button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.input-with-button input {
+    flex: 1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    align-self: flex-start;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    font-family: monospace;
+    font-size: 14px;
+    min-height: 120px;
+}
+
+.form-group .button-row {
+    margin-top: 8px;
+    display: flex;
+    gap: 10px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+input,
+textarea,
+button {
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.flash-red {
+    animation: flashRed 0.45s ease-in-out;
+    outline: none;
+}
+
+.mask-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    width: 100%;
+}
+
+#neighborMaskSelector {
+    display: grid;
+    grid-template-columns: repeat(5, 15px);
+    grid-template-rows: repeat(5, 15px);
+    gap: 0;
+    width: 75px;
+    height: 75px;
+}
+
+#neighborMaskSelector>div {
+    background: white;
+    width: 15px;
+    height: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+
+@keyframes flashRed {
+
+    0%,
+    100% {
+        border-color: initial;
+        background: initial;
+    }
+
+    50% {
+        border-color: red;
+        background: rgba(255, 0, 0, 0.247);
+    }
+}
