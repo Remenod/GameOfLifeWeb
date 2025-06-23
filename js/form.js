@@ -1,6 +1,7 @@
 import { drawPreviewCanvas } from "./canvas.js";
 import { updateUrlParams, showToast } from "./utils.js";
 import { playing, togglePlay, runGame } from "./game.js";
+import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm';
 
 const cells = document.querySelectorAll("#neighborMaskSelector > div");
 const blackIndices = [6, 7, 8, 11, 13, 16, 17, 18];
@@ -22,6 +23,94 @@ function resetNeighborMask() {
     cells.forEach((cell, index) => {
         cell.style.background = blackIndices.includes(index) ? "black" : "white";
     });
+}
+
+
+const helpContent = await loadHelpContent();
+
+const modalCloseHandler = (e) => {
+    if (!document.querySelector(".modal-content")?.contains(e.target)) {
+        closeHelp();
+        document.removeEventListener("click", modalCloseHandler);
+    }
+};
+
+function openHelp(key, trigger) {
+    const data = helpContent[key];
+    if (!data) return;
+    closeHelp();
+
+    if (data.type === "tooltip") {
+        const tooltip = document.createElement("div");
+        tooltip.className = "tooltip-box";
+        tooltip.innerHTML = data.html;
+        document.body.appendChild(tooltip);
+
+        const rect = trigger.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + window.scrollX}px`;
+        tooltip.style.top = `${rect.bottom + 6 + window.scrollY}px`;
+
+        trigger._tooltip = tooltip;
+
+        setTimeout(() => { document.addEventListener("click", closeHelp); }, 0);
+    }
+
+    if (data.type === "modal") {
+        const overlay = document.createElement("div");
+        overlay.className = "modal-overlay";
+        overlay.innerHTML = `
+            <div class="modal-content">
+                <button class="close-btn" id="close-modal">×</button>
+                <div id="helpContentContainer" class="markdown-content">
+                ${data.html}
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById("close-modal").addEventListener("click", closeHelp);
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => { document.addEventListener("click", modalCloseHandler); }, 0);
+    }
+}
+
+function closeHelp() {
+    document.querySelectorAll(".tooltip-box").forEach(e => e.remove());
+    document.querySelectorAll(".modal-overlay").forEach(e => e.remove());
+    document.removeEventListener("click", closeHelp);
+    document.removeEventListener("click", modalCloseHandler);
+    document.body.style.overflow = '';
+}
+
+async function loadHelpContent() {
+    const helpContent = {};
+    const response = await fetch(`help/index.json?nocache=${Date.now()}`);
+    const keys = await response.json();
+
+    for (const key of keys) {
+        const mdRes = await fetch(`help/${key}.md?nocache=${Date.now()}`);
+        const mdText = await mdRes.text();
+        helpContent[key] = parseMarkdownHelp(mdText);
+    }
+    return helpContent;
+}
+
+function parseMarkdownHelp(md) {
+    const lines = md.trim().split('\n');
+    let type = 'modal'; // default
+    let contentStart = 0;
+
+    for (let i = 0; i < 3; i++) {
+        if (lines[i]?.startsWith('type:')) {
+            type = lines[i].split(':')[1].trim();
+            contentStart = i + 1;
+            break;
+        }
+    }
+
+    const markdownBody = lines.slice(contentStart).join('\n');
+    const html = marked.parse(markdownBody);
+
+    return { type, html };
 }
 
 document.getElementById("pasteBtn").addEventListener("click", async () => {
@@ -81,6 +170,12 @@ document.getElementById("settingsForm").addEventListener("submit", async (e) => 
     });
 
     await runGame(widthInput, heightInput, ruleInput, fieldInput, mask);
+});
+
+document.querySelectorAll(".info-small").forEach(btn => {
+    btn.addEventListener("click", () => {
+        openHelp(btn.dataset.type, btn);
+    });
 });
 
 cells.forEach(cell => {
