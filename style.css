@@ -209,7 +209,6 @@ button:disabled {
     word-break: break-word;
 }
 
-
 .toast-message.show {
     opacity: 1;
 }
@@ -237,7 +236,6 @@ button:disabled {
     outline: none;
     box-shadow: none;
 }
-
 
 .tooltip-box {
     position: absolute;
@@ -279,11 +277,15 @@ button:disabled {
 .modal-content button.close-btn {
     position: absolute;
     top: 8px;
-    right: 12px;
+    right: 8px;
     background: none;
     border: none;
     font-size: 1.2em;
     cursor: pointer;
+    font-weight: bold;
+    color: #888;
+    padding: 2px 6px;
+    line-height: 1;
 }
 
 .markdown-content {
@@ -291,20 +293,7 @@ button:disabled {
     flex-grow: 1;
     max-height: 65vh;
     padding-right: 0.5em;
-}
-
-.close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: transparent;
-    border: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    color: #888;
-    padding: 2px 6px;
-    line-height: 1;
+    padding-top: 1.5em;
 }
 
 .close-btn:hover {
