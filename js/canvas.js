@@ -112,44 +112,46 @@ function toggleCellAtEvent(event) {
     }
 }
 
-canvas.addEventListener("mousedown", (event) => {
-    isDragging = true;
-    toggledCells.clear();
-    toggleCellAtEvent(event);
-});
+export function addCanvasListeners() {
+    canvas.addEventListener("mousedown", (event) => {
+        isDragging = true;
+        toggledCells.clear();
+        toggleCellAtEvent(event);
+    });
 
-canvas.addEventListener("mousemove", (event) => {
-    if (isDragging) toggleCellAtEvent(event);
-});
+    canvas.addEventListener("mousemove", (event) => {
+        if (isDragging) toggleCellAtEvent(event);
+    });
 
-canvas.addEventListener("mouseup", () => {
-    isDragging = false;
-    toggledCells.clear();
-});
+    canvas.addEventListener("mouseup", () => {
+        isDragging = false;
+        toggledCells.clear();
+    });
 
-canvas.addEventListener("mouseleave", () => {
-    isDragging = false;
-    toggledCells.clear();
-});
+    canvas.addEventListener("mouseleave", () => {
+        isDragging = false;
+        toggledCells.clear();
+    });
 
-canvas.addEventListener("touchstart", (event) => {
-    event.preventDefault();
-    isDragging = true;
-    toggledCells.clear();
-    toggleCellAtEvent(event);
-}, { passive: false });
+    canvas.addEventListener("touchstart", (event) => {
+        event.preventDefault();
+        isDragging = true;
+        toggledCells.clear();
+        toggleCellAtEvent(event);
+    }, { passive: false });
 
-canvas.addEventListener("touchmove", (event) => {
-    event.preventDefault();
-    if (isDragging) toggleCellAtEvent(event);
-}, { passive: false });
+    canvas.addEventListener("touchmove", (event) => {
+        event.preventDefault();
+        if (isDragging) toggleCellAtEvent(event);
+    }, { passive: false });
 
-canvas.addEventListener("touchend", () => {
-    isDragging = false;
-    toggledCells.clear();
-});
+    canvas.addEventListener("touchend", () => {
+        isDragging = false;
+        toggledCells.clear();
+    });
 
-canvas.addEventListener("touchcancel", () => {
-    isDragging = false;
-    toggledCells.clear();
-});
+    canvas.addEventListener("touchcancel", () => {
+        isDragging = false;
+        toggledCells.clear();
+    });
+}
