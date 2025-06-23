@@ -66,6 +66,13 @@ export function resetElementValue(elementId, defaultValue = "") {
 
 const helpContent = await loadHelpContent();
 
+const modalCloseHandler = (e) => {
+    if (!document.querySelector(".modal-content")?.contains(e.target)) {
+        closeHelp();
+        document.removeEventListener("click", modalCloseHandler);
+    }
+};
+
 export function openHelp(key, trigger) {
     const data = helpContent[key];
     if (!data) return;
@@ -100,7 +107,7 @@ export function openHelp(key, trigger) {
         document.getElementById("close-modal").addEventListener("click", closeHelp);
         document.body.style.overflow = 'hidden';
 
-        setTimeout(() => { document.addEventListener("click", closeHelp); }, 0);
+        setTimeout(() => { document.addEventListener("click", modalCloseHandler); }, 0);
     }
 }
 
@@ -108,6 +115,7 @@ function closeHelp() {
     document.querySelectorAll(".tooltip-box").forEach(e => e.remove());
     document.querySelectorAll(".modal-overlay").forEach(e => e.remove());
     document.removeEventListener("click", closeHelp);
+    document.removeEventListener("click", modalCloseHandler);
     document.body.style.overflow = '';
 }
 
