@@ -33,6 +33,7 @@ jobs:
           cp -r pkg dist/pkg
           cp index.html dist/
           cp -r js dist/js
+          cp -r help dist/help
           cp style.css dist/
           cp favicon.ico dist/
           rm dist/pkg/.gitignore 
