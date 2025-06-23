@@ -1,0 +1,47 @@
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.short-input {
+    width: 10ch;
+}
+
+.toast-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+
+    max-width: 90%;
+    width: fit-content;
+    text-align: center;
+    word-break: break-word;
+}
+
+.toast-message.show {
+    opacity: 1;
+}

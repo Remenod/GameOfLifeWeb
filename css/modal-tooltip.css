@@ -1,0 +1,78 @@
+.tooltip-box {
+    position: absolute;
+    background-color: #222;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    max-width: 240px;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    transform: translateY(-8px);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.markdown-content {
+    overflow-y: auto;
+    flex-grow: 1;
+    max-height: 65vh;
+    padding-right: 0.5em;
+}
+
+.markdown-content ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+    margin-bottom: 1em;
+}
+
+.markdown-content li {
+    margin-bottom: 0.4em;
+}
+
+.markdown-content img {
+    max-width: 50%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1.5em 0;
+}
+
+.markdown-content pre {
+    background-color: #f6f8fa;
+    color: #24292f;
+    padding: 0.8em 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.95em;
+    line-height: 1.4;
+    margin: 1em 0;
+    white-space: pre-wrap;
+}
