@@ -293,7 +293,6 @@ button:disabled {
     flex-grow: 1;
     max-height: 65vh;
     padding-right: 0.5em;
-    padding-top: 1.5em;
 }
 
 .close-btn:hover {
