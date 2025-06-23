@@ -82,11 +82,11 @@ function closeHelp() {
 
 async function loadHelpContent() {
     const helpContent = {};
-    const response = await fetch(`help/index.json?nocache=${Date.now()}`);
+    const response = await fetch(`help/index.json`); // ?nocache=${Date.now()}
     const keys = await response.json();
 
     for (const key of keys) {
-        const mdRes = await fetch(`help/${key}.md?nocache=${Date.now()}`);
+        const mdRes = await fetch(`help/${key}.md`); // ?nocache=${Date.now()}
         const mdText = await mdRes.text();
         helpContent[key] = parseMarkdownHelp(mdText);
     }
