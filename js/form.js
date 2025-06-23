@@ -56,6 +56,8 @@ document.getElementById("widthInput").addEventListener("input", () => { drawPrev
 document.getElementById("heightInput").addEventListener("input", () => { drawPreviewCanvas(), updateUrlParams() });
 document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
 
+document.getElementById("copyUrl").addEventListener("click", copyUrl);
+
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
