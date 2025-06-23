@@ -7,6 +7,7 @@
     <title>Game of Life</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
@@ -17,7 +18,9 @@
             <div class="form-group">
                 <label>
                     Width
-                    <button type="button" class="info-small" onclick="openHelp('width', this)">ℹ️</button>
+                    <button type="button" class="info-small" onclick="openHelp('width', this)">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
                 </label>
                 <div class="input-with-button">
                     <input type="number" id="widthInput" value="100" min="1" max="10000" required />
@@ -28,7 +31,9 @@
             <div class="form-group">
                 <label>
                     Height
-                    <button type="button" class="info-small" onclick="openHelp('height', this)">ℹ️</button>
+                    <button type="button" class="info-small" onclick="openHelp('height', this)">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
                 </label>
                 <div class="input-with-button">
                     <input type="number" id="heightInput" value="100" min="1" max="10000" required />
@@ -39,7 +44,9 @@
             <div class="form-group">
                 <label>
                     Rule
-                    <button type="button" class="info-small" onclick="openHelp('rule', this)">ℹ️</button>
+                    <button type="button" class="info-small" onclick="openHelp('rule', this)">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
                 </label>
                 <div class="input-with-button">
                     <input type="text" id="ruleInput" value="B3/S23" required />
@@ -50,7 +57,9 @@
             <div class="form-group">
                 <label>
                     Neighbors mask
-                    <button type="button" class="info-small" onclick="openHelp('mask', this)">ℹ️</button>
+                    <button type="button" class="info-small" onclick="openHelp('mask', this)">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
                 </label>
                 <div class="mask-row">
                     <div id="neighborMaskSelector">
@@ -89,7 +98,9 @@
             <div class="form-group">
                 <label>
                     Field Template (optional)
-                    <button type="button" class="info-small" onclick="openHelp('template', this)">ℹ️</button>
+                    <button type="button" class="info-small" onclick="openHelp('template', this)">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
                 </label>
                 <textarea id="fieldInput" placeholder="Leave blank for empty field" rows="6"></textarea>
                 <div class="button-row">

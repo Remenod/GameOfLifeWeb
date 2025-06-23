@@ -66,8 +66,9 @@ h1 {
 }
 
 .form-group label {
-    margin-bottom: 4px;
+    align-self: flex-start;
     font-weight: 500;
+    margin-bottom: 4px;
 }
 
 .form-group textarea {
@@ -227,7 +228,16 @@ button:disabled {
     cursor: pointer;
     color: #555;
     padding: 0;
+    outline: none;
 }
+
+.info-small:hover,
+.info-small:focus {
+    background: none;
+    outline: none;
+    box-shadow: none;
+}
+
 
 .tooltip-box {
     position: absolute;
