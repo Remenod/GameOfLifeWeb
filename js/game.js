@@ -54,7 +54,7 @@ export function togglePlay(disableTickBtn = true) {
         document.getElementById('tickBtn').disabled = playing;
 }
 
-export function clearGrid() {
+function clearGrid() {
     if (playing) {
         togglePlay();
     }
@@ -63,6 +63,11 @@ export function clearGrid() {
             game.set_cell(x, y, false);
         }
     }
+    drawCanvas();
+}
+
+function tick() {
+    game.tick();
     drawCanvas();
 }
 
@@ -76,11 +81,6 @@ function copyField(version, encoder = null) {
     navigator.clipboard.writeText(result)
         .then(() => showToast(`The ${version} template is copied.`))
         .catch(err => console.error("A copying error:", err));
-}
-
-export function tick() {
-    game.tick();
-    drawCanvas();
 }
 
 document.getElementById("v1copyBtn").addEventListener("click", () => copyField("v1"))

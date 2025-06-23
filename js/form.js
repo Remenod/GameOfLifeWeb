@@ -1,8 +1,11 @@
-import { updateUrlParams, showToast } from "./utils.js";
 import { drawPreviewCanvas } from "./canvas.js";
+import { updateUrlParams, showToast } from "./utils.js";
 import { playing, togglePlay, runGame } from "./game.js";
 
-export function copyUrl() {
+const cells = document.querySelectorAll("#neighborMaskSelector > div");
+const blackIndices = [6, 7, 8, 11, 13, 16, 17, 18];
+
+function copyUrl() {
     const url = window.location.href;
     navigator.clipboard.writeText(url)
         .then(() => {
@@ -15,10 +18,7 @@ export function copyUrl() {
         });
 }
 
-const cells = document.querySelectorAll("#neighborMaskSelector > div");
-const blackIndices = [6, 7, 8, 11, 13, 16, 17, 18];
-
-export function resetNeighborMask() {
+function resetNeighborMask() {
     cells.forEach((cell, index) => {
         cell.style.background = blackIndices.includes(index) ? "black" : "white";
     });
@@ -51,9 +51,11 @@ document.getElementById("pasteBtn").addEventListener("click", async () => {
     }
 });
 
-document.getElementById("fieldInput").addEventListener("input", () => { drawPreviewCanvas(), updateUrlParams() });
-document.getElementById("widthInput").addEventListener("input", () => { drawPreviewCanvas(), updateUrlParams() });
-document.getElementById("heightInput").addEventListener("input", () => { drawPreviewCanvas(), updateUrlParams() });
+const change = () => { drawPreviewCanvas(), updateUrlParams() };
+
+document.getElementById("fieldInput").addEventListener("input", change);
+document.getElementById("widthInput").addEventListener("input", change);
+document.getElementById("heightInput").addEventListener("input", change);
 document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
 
 document.getElementById("copyUrl").addEventListener("click", copyUrl);
