@@ -28,11 +28,16 @@ Below is an example where a cell considers only the horizontal and vertical line
 
 ![Mask Example](help/img/mask_00.png)
 
+As we can see, the central cell considers only the **three cells marked with green** as its neighbors — even though there are many other live cells much closer.
+Because of the `B3` rule, it becomes alive in the next generation.
+
 Another example shows a full 5×5 mask:
 
 ![Mask Full](help/img/mask_01.png)
 
-You can toggle any of the 24 surrounding positions, and even the center cell itself, to shape how your rule behaves.
+In this situation, the central cell considers **all live cells within a 5×5 radius** as its neighbors.  
+It has 8 living neighbors, even though there are **no live cells** in the standard 3×3 area around it.  
+Since we’re using the `B3/S23` rule — and there’s **no case for 8 neighbors** — the cell will **die in the next generation**.
 
 ---
 
