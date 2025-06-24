@@ -44,7 +44,16 @@ impl Game for AltGameOfLife {
     }
 
     fn set_cell(&mut self, x: usize, y: usize, value: u8) {
-        todo!()
+        let index = get_index(self.width, x, y);
+
+        if index >= self.total_cells {
+            return;
+        }
+        if value != 0 {
+            self.current_field.insert(index);
+        } else {
+            self.current_field.remove(&index);
+        }
     }
 
     fn get_field(&self) -> &Vec<u8> {
