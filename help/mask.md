@@ -31,8 +31,6 @@ Below is an example where a cell considers only the horizontal and vertical line
 As we can see, the central cell considers only the **three cells marked with green** as its neighbors — even though there are many other live cells much closer.
 Because of the `B3` rule, it becomes alive in the next generation.
 
----
-
 Another example shows a full 5×5 mask:
 
 ![Mask Full](help/img/mask_01.png)
