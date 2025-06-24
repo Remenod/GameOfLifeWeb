@@ -47,12 +47,7 @@ impl WasmGame {
     }
 
     pub fn export_field(&self) -> String {
-        let bits = self.inner.get_field();
-        let mut s = String::with_capacity(bits.len());
-        for &b in bits {
-            s.push(if b != 0 { '1' } else { '0' });
-        }
-        s
+        self.inner.export_field()
     }
 
     pub fn get_height(&self) -> usize {

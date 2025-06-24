@@ -88,8 +88,12 @@ impl Game for GameOfLife {
         self.current_field[index] = value;
     }
 
-    fn get_field(&self) -> &Vec<u8> {
-        &self.current_field
+    fn export_field(&self) -> String {
+        let mut s = String::with_capacity(self.total_cells);
+        for b in &self.current_field {
+            s.push(if *b != 0 { '1' } else { '0' });
+        }
+        s
     }
 
     fn get_height(&self) -> usize {

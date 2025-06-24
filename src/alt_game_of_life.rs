@@ -62,7 +62,7 @@ impl Game for AltGameOfLife {
         }
     }
 
-    fn get_field(&self) -> &Vec<u8> {
+    fn export_field(&self) -> String {
         todo!()
     }
 

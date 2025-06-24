@@ -17,7 +17,7 @@ pub trait Game {
 
     fn set_cell(&mut self, x: usize, y: usize, value: u8);
 
-    fn get_field(&self) -> &Vec<u8>;
+    fn export_field(&self) -> String;
 
     fn get_height(&self) -> usize;
 
