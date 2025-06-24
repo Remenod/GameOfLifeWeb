@@ -5,8 +5,8 @@ struct AltGameOfLife {
     width: usize,
     height: usize,
     total_cells: usize,
-    current_field: FxHashSet<u8>,
-    next_field: FxHashSet<u8>,
+    current_field: FxHashSet<usize>,
+    next_field: FxHashSet<usize>,
     game_rule: GameRule,
     offsets: Vec<(i8, i8)>,
 }
@@ -18,11 +18,21 @@ impl Game for AltGameOfLife {
         current: Vec<u8>,
         game_rule: GameRule,
         check_rule: &[u8],
-    ) -> Self
-    where
-        Self: Sized,
-    {
-        todo!()
+    ) -> AltGameOfLife {
+        AltGameOfLife {
+            width: width,
+            height: height,
+            total_cells: width * height,
+            current_field: current
+                .into_iter()
+                .enumerate()
+                .filter(|(_, x)| *x != 0)
+                .map(|(i, _)| i)
+                .collect(),
+            next_field: FxHashSet::default(),
+            game_rule: game_rule,
+            offsets: GameRule::get_offsets(check_rule),
+        }
     }
 
     fn next_turn(&mut self) {
