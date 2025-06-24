@@ -6,7 +6,7 @@ use crate::{
 use once_cell::sync::Lazy;
 use rustc_hash::{FxBuildHasher, FxHashSet};
 
-struct AltGameOfLife {
+pub struct AltGameOfLife {
     width: usize,
     height: usize,
     total_cells: usize,

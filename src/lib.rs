@@ -5,7 +5,7 @@ mod game_rule;
 mod traits;
 mod utils;
 
-use crate::{game_of_life::GameOfLife, traits::game::Game};
+use crate::{alt_game_of_life::AltGameOfLife, game_of_life::GameOfLife, traits::game::Game};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -22,15 +22,26 @@ impl WasmGame {
         field: Vec<u8>,
         rule: &str,
         check_rule: &[u8],
+        alt: bool,
     ) -> WasmGame {
         WasmGame {
-            inner: Box::new(GameOfLife::new(
-                width,
-                height,
-                field,
-                rule.try_into().unwrap_or_default(),
-                check_rule,
-            )),
+            inner: if alt {
+                Box::new(AltGameOfLife::new(
+                    width,
+                    height,
+                    field,
+                    rule.try_into().unwrap_or_default(),
+                    check_rule,
+                ))
+            } else {
+                Box::new(GameOfLife::new(
+                    width,
+                    height,
+                    field,
+                    rule.try_into().unwrap_or_default(),
+                    check_rule,
+                ))
+            },
         }
     }
 
