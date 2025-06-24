@@ -1,4 +1,8 @@
-use crate::{game_rule::GameRule, traits::game::Game, utils::coord_converter::*};
+use crate::{
+    game_rule::GameRule,
+    traits::game::Game,
+    utils::{check_cell_next_turn::*, coord_converter::*},
+};
 
 pub struct GameOfLife {
     width: usize,
@@ -8,29 +12,6 @@ pub struct GameOfLife {
     next_field: Vec<u8>,
     game_rule: GameRule,
     offsets: Vec<(i8, i8)>,
-}
-
-impl GameOfLife {
-    fn check_cell_next_turn(&self, index: usize) -> bool {
-        let (x, y) = get_x_y(self.width, index);
-
-        let neighbours = self
-            .offsets
-            .iter()
-            .filter_map(|(dx, dy)| {
-                let nx = x.wrapping_add_signed(*dx as isize);
-                let ny = y.wrapping_add_signed(*dy as isize);
-                if nx < self.width && ny < self.height {
-                    Some(self.current_field[get_index(self.width, nx, ny)] as u8)
-                } else {
-                    None
-                }
-            })
-            .sum::<u8>();
-
-        self.game_rule
-            .may_survive(self.current_field[index] != 0, neighbours)
-    }
 }
 
 impl Game for GameOfLife {
@@ -61,7 +42,14 @@ impl Game for GameOfLife {
     }
     fn next_turn(&mut self) {
         for i in 0..(self.height * self.width) {
-            let v = self.check_cell_next_turn(i);
+            let v = check_cell_next_turn(
+                &self.current_field,
+                &self.game_rule,
+                i,
+                self.width,
+                self.height,
+                &self.offsets,
+            );
             self.next_field[i] = v as u8;
         }
 

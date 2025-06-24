@@ -1,4 +1,9 @@
-use crate::{game_rule::GameRule, traits::game::Game, utils::coord_converter::*};
+use crate::{
+    game_rule::GameRule,
+    traits::game::Game,
+    utils::{check_cell_next_turn::*, coord_converter::*},
+};
+use once_cell::sync::Lazy;
 use rustc_hash::FxHashSet;
 
 struct AltGameOfLife {
