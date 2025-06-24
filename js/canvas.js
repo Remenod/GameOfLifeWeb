@@ -21,7 +21,7 @@ export function drawCanvas() {
     const width = game.get_width();
     const height = game.get_height();
 
-    drawGenericCanvas(canvas, ctx, cellSize, width, height, 25, (x, y) => game.get_cell(x, y));
+    drawGenericCanvas(canvas, ctx, 900, width, height, 25, (x, y) => game.get_cell(x, y));
 }
 
 export function drawPreviewCanvas() {
@@ -29,17 +29,19 @@ export function drawPreviewCanvas() {
     const height = parseInt(document.getElementById("heightInput").value, 10);
     const fld = parse_field(document.getElementById("fieldInput").value.trim(), width);
 
-    drawGenericCanvas(previewCanvas, previewCtx, previewCellSize, width, height, 10, (x, y) => {
+    drawGenericCanvas(previewCanvas, previewCtx, 300, width, height, 10, (x, y) => {
         const idx = y * width + x;
         return idx < fld.length ? fld[idx] === 1 : false;
     });
 }
 
-function drawGenericCanvas(canv, canvCtx, cellSize, width, height, pixelatedThreshold, getData) {
+function drawGenericCanvas(canv, canvCtx, maxSize, width, height, pixelatedThreshold, getData) {
     updateImageRendering(canv, pixelatedThreshold, width, height);
 
-    canv.width = width * cellSize + lineWidth;
-    canv.height = height * cellSize + lineWidth;
+    const cellSize = Math.floor(Math.min(maxSize / width, maxSize / height));
+
+    canv.width = cellSize * width + lineWidth;
+    canv.height = cellSize * height + lineWidth;
 
     canvCtx.clearRect(0, 0, canv.width, canv.height);
 
