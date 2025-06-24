@@ -9,6 +9,7 @@
 
 help/*.md linguist-language=Markdown
 help/*.md linguist-documentation=false
+help/*.md linguist-detectable=true
 
 *.wasm binary -diff
 pkg/** linguist-generated -diff
