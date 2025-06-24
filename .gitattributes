@@ -6,9 +6,10 @@
 *.html text
 *.json text
 *.toml text
+*.md text
 
-help/*.md linguist-language=Markdown
-help/*.md linguist-documentation=false
+*.md linguist-language=Markdown
+*.md linguist-documentation=false
 
 *.wasm binary -diff
 pkg/** linguist-generated -diff
