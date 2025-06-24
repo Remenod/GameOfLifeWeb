@@ -1,6 +1,7 @@
 mod bounded_set_queue;
 mod game_of_life;
 mod game_rule;
+mod traits;
 
 use crate::game_of_life::GameOfLife;
 use wasm_bindgen::prelude::*;
