@@ -63,7 +63,15 @@ impl Game for AltGameOfLife {
     }
 
     fn export_field(&self) -> String {
-        todo!()
+        let mut s = String::with_capacity(self.total_cells);
+        for i in 0..self.total_cells {
+            s.push(if self.current_field.contains(&i) {
+                '1'
+            } else {
+                '0'
+            });
+        }
+        s
     }
 
     fn get_height(&self) -> usize {
