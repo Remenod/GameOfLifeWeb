@@ -1,0 +1,19 @@
+* text=auto
+
+*.rs linguist-language=Rust
+*.js text
+*.css text
+*.html text
+*.json text
+*.toml text
+*.md text
+
+*.md linguist-language=Markdown
+*.md linguist-documentation=false
+
+*.wasm binary -diff
+pkg/** linguist-generated -diff
+
+*.png binary
+*.jpg binary
+*.ico binary
