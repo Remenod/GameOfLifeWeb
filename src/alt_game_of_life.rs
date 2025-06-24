@@ -67,10 +67,10 @@ impl Game for AltGameOfLife {
     }
 
     fn get_height(&self) -> usize {
-        todo!()
+        self.height
     }
 
     fn get_width(&self) -> usize {
-        todo!()
+        self.width
     }
 }
