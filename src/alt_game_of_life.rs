@@ -40,7 +40,13 @@ impl Game for AltGameOfLife {
     }
 
     fn get_cell(&self, x: usize, y: usize) -> bool {
-        todo!()
+        let index = get_index(self.width, x, y);
+
+        return if index >= self.total_cells {
+            false
+        } else {
+            self.current_field.contains(&index)
+        };
     }
 
     fn set_cell(&mut self, x: usize, y: usize, value: u8) {
