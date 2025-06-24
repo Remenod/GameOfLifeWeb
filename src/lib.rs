@@ -9,7 +9,7 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct WasmGame {
-    inner: GameOfLife,
+    inner: Box<dyn Game>,
 }
 
 #[wasm_bindgen]
@@ -23,13 +23,13 @@ impl WasmGame {
         check_rule: &[u8],
     ) -> WasmGame {
         WasmGame {
-            inner: GameOfLife::new(
+            inner: Box::new(GameOfLife::new(
                 width,
                 height,
                 field,
                 rule.try_into().unwrap_or_default(),
                 check_rule,
-            ),
+            )),
         }
     }
 

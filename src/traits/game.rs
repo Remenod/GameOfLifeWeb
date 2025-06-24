@@ -7,7 +7,9 @@ pub trait Game {
         current: Vec<u8>,
         game_rule: GameRule,
         check_rule: &[u8],
-    ) -> Self;
+    ) -> Self
+    where
+        Self: Sized;
 
     fn next_turn(&mut self);
 
