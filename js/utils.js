@@ -28,8 +28,8 @@ export async function updateUrlParams() {
     if (width) params.set("w", width);
     if (height) params.set("h", height);
     if (rule) params.set("r", rule.replace("/", "."));
-    if (field) params.set("f", field.replace(/\[/g, '-').replace(/\]/g, '_').replace(";", '.'));
     if (mask) params.set("m", encode_field(mask.join(""), true));
+    if (field) params.set("f", field.replace(/\[/g, '-').replace(/\]/g, '_').replace(";", '.'));
 
     const newUrl = `${location.pathname}?${params.toString()}`;
     history.replaceState(null, "", newUrl);
