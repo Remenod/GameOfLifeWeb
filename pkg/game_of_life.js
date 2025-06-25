@@ -231,15 +231,16 @@ export class WasmGame {
      * @param {Uint8Array} field
      * @param {string} rule
      * @param {Uint8Array} check_rule
+     * @param {boolean} alt
      */
-    constructor(width, height, field, rule, check_rule) {
+    constructor(width, height, field, rule, check_rule, alt) {
         const ptr0 = passArray8ToWasm0(field, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
         const ptr1 = passStringToWasm0(rule, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
         const ptr2 = passArray8ToWasm0(check_rule, wasm.__wbindgen_malloc);
         const len2 = WASM_VECTOR_LEN;
-        const ret = wasm.wasmgame_new(width, height, ptr0, len0, ptr1, len1, ptr2, len2);
+        const ret = wasm.wasmgame_new(width, height, ptr0, len0, ptr1, len1, ptr2, len2, alt);
         this.__wbg_ptr = ret >>> 0;
         WasmGameFinalization.register(this, this.__wbg_ptr, this);
         return this;
