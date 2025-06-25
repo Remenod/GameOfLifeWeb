@@ -1,4 +1,8 @@
-use crate::game_rule::GameRule;
+use crate::{
+    game_rule::GameRule,
+    traits::game::Game,
+    utils::{check_cell_next_turn::*, coord_converter::*},
+};
 
 pub struct GameOfLife {
     width: usize,
@@ -10,8 +14,8 @@ pub struct GameOfLife {
     offsets: Vec<(i8, i8)>,
 }
 
-impl GameOfLife {
-    pub fn new(
+impl Game for GameOfLife {
+    fn new(
         width: usize,
         height: usize,
         mut current: Vec<u8>,
@@ -36,49 +40,24 @@ impl GameOfLife {
             offsets: GameRule::get_offsets(check_rule),
         }
     }
-
-    fn get_index(&self, x: usize, y: usize) -> usize {
-        y * self.width + x
-    }
-
-    fn get_x_y(&self, index: usize) -> (usize, usize) {
-        let y = index / self.width;
-        let x = index % self.width;
-        (x, y)
-    }
-
-    fn check_cell_next_turn(&self, index: usize) -> bool {
-        let (x, y) = self.get_x_y(index);
-
-        let neighbours = self
-            .offsets
-            .iter()
-            .filter_map(|(dx, dy)| {
-                let nx = x.wrapping_add_signed(*dx as isize);
-                let ny = y.wrapping_add_signed(*dy as isize);
-                if nx < self.width && ny < self.height {
-                    Some(self.current_field[self.get_index(nx, ny)] as u8)
-                } else {
-                    None
-                }
-            })
-            .sum::<u8>();
-
-        self.game_rule
-            .may_survive(self.current_field[index] != 0, neighbours)
-    }
-
-    pub fn next_turn(&mut self) {
+    fn next_turn(&mut self) {
         for i in 0..(self.height * self.width) {
-            let v = self.check_cell_next_turn(i);
+            let v = check_cell_next_turn(
+                &self.current_field,
+                &self.game_rule,
+                i,
+                self.width,
+                self.height,
+                &self.offsets,
+            );
             self.next_field[i] = v as u8;
         }
 
         std::mem::swap(&mut self.current_field, &mut self.next_field);
     }
 
-    pub fn get_cell(&self, x: usize, y: usize) -> bool {
-        let index = self.get_index(x, y);
+    fn get_cell(&self, x: usize, y: usize) -> bool {
+        let index = get_index(self.width, x, y);
 
         return if index >= self.total_cells {
             false
@@ -87,8 +66,8 @@ impl GameOfLife {
         };
     }
 
-    pub fn set_cell(&mut self, x: usize, y: usize, value: u8) {
-        let index = self.get_index(x, y);
+    fn set_cell(&mut self, x: usize, y: usize, value: u8) {
+        let index = get_index(self.width, x, y);
 
         if index >= self.total_cells {
             return;
@@ -97,15 +76,19 @@ impl GameOfLife {
         self.current_field[index] = value;
     }
 
-    pub fn get_field(&self) -> &Vec<u8> {
-        &self.current_field
+    fn export_field(&self) -> String {
+        let mut s = String::with_capacity(self.total_cells);
+        for b in &self.current_field {
+            s.push(if *b != 0 { '1' } else { '0' });
+        }
+        s
     }
 
-    pub fn get_height(&self) -> usize {
+    fn get_height(&self) -> usize {
         self.height
     }
 
-    pub fn get_width(&self) -> usize {
+    fn get_width(&self) -> usize {
         self.width
     }
 }

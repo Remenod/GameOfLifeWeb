@@ -1,13 +1,16 @@
+mod alt_game_of_life;
 mod bounded_set_queue;
 mod game_of_life;
 mod game_rule;
+mod traits;
+mod utils;
 
-use crate::game_of_life::GameOfLife;
+use crate::{alt_game_of_life::AltGameOfLife, game_of_life::GameOfLife, traits::game::Game};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct WasmGame {
-    inner: GameOfLife,
+    inner: Box<dyn Game>,
 }
 
 #[wasm_bindgen]
@@ -19,15 +22,26 @@ impl WasmGame {
         field: Vec<u8>,
         rule: &str,
         check_rule: &[u8],
+        alt: bool,
     ) -> WasmGame {
         WasmGame {
-            inner: GameOfLife::new(
-                width,
-                height,
-                field,
-                rule.try_into().unwrap_or_default(),
-                check_rule,
-            ),
+            inner: if alt {
+                Box::new(AltGameOfLife::new(
+                    width,
+                    height,
+                    field,
+                    rule.try_into().unwrap_or_default(),
+                    check_rule,
+                ))
+            } else {
+                Box::new(GameOfLife::new(
+                    width,
+                    height,
+                    field,
+                    rule.try_into().unwrap_or_default(),
+                    check_rule,
+                ))
+            },
         }
     }
 
@@ -44,12 +58,7 @@ impl WasmGame {
     }
 
     pub fn export_field(&self) -> String {
-        let bits = self.inner.get_field();
-        let mut s = String::with_capacity(bits.len());
-        for &b in bits {
-            s.push(if b != 0 { '1' } else { '0' });
-        }
-        s
+        self.inner.export_field()
     }
 
     pub fn get_height(&self) -> usize {
