@@ -4,7 +4,7 @@ import { playing, togglePlay, runGame } from "./game.js";
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm';
 
 const cells = document.querySelectorAll("#neighborMaskSelector > div");
-const defMask = "0000001110010100111000000";
+export const defMask = "0000001110010100111000000";
 
 function copyUrl() {
     const url = window.location.href;

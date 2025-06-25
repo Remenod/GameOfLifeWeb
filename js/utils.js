@@ -1,4 +1,4 @@
-import { setNeighborMask, getNeighborMask } from "./form.js";
+import { setNeighborMask, getNeighborMask, defMask } from "./form.js";
 import { decode_field, encode_field } from "../pkg/game_of_life.js";
 
 let wasmIsReady = false;
@@ -21,14 +21,14 @@ export async function updateUrlParams() {
     const height = document.getElementById("heightInput").value;
     const rule = document.getElementById("ruleInput").value;
     const field = document.getElementById("fieldInput").value;
-    const mask = getNeighborMask();
+    const mask = getNeighborMask().join("");
 
     const params = new URLSearchParams();
 
     if (width) params.set("w", width);
     if (height) params.set("h", height);
     if (rule) params.set("r", rule.replace("/", "."));
-    if (mask) params.set("m", encode_field(mask.join(""), true));
+    if (mask) params.set("m", mask == defMask ? "d" : encode_field(mask, true));
     if (field) params.set("f", field.replace(/\[/g, '-').replace(/\]/g, '_').replace(";", '.'));
 
     const newUrl = `${location.pathname}?${params.toString()}`;
@@ -49,7 +49,7 @@ export async function loadFromUrlParams() {
     if (height) document.getElementById("heightInput").value = height;
     if (rule) document.getElementById("ruleInput").value = rule.replace(".", "/");
     if (field) document.getElementById("fieldInput").value = field.replace(/-/g, '[').replace(/_/g, "]").replace(".", ";");
-    if (mask) setNeighborMask(decode_field(mask, true));
+    if (mask) setNeighborMask(mask == "d" ? defMask : decode_field(mask, true));
 }
 
 export function enforceDisabledControls() {
