@@ -24,7 +24,7 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
         return;
     }
 
-    game = new WasmGame(width, height, parse_field(fieldInput, width), rule, neighboursRuleInput);
+    game = new WasmGame(width, height, parse_field(fieldInput, width), rule, neighboursRuleInput, document.getElementById("alt-switch").checked);
     drawCanvas();
     addCanvasListeners();
 

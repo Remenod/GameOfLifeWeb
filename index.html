@@ -112,12 +112,26 @@
                     <button type="button" id="pasteBtn">Paste template</button>
                     <button type="button" class="resetBtn" data-element="fieldInput" data-default="">Clear
                         template</button>
+                    <button type="button" id="copyUrl">Copy URL</button>
                 </div>
             </div>
 
             <div class="form-actions">
                 <button type="submit">Start Game</button>
-                <button type="button" id="copyUrl">Copy URL</button>
+                <div class="alt-group">
+                    <label for="alt-switch" class="switch-label">
+                        Alt mode
+                        <button type="button" class="info-small" data-type="alt">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </label>
+
+                    <label class="switch">
+                        <input type="checkbox" id="alt-switch">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
             </div>
 
             <div class="form-preview">
