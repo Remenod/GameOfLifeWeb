@@ -1,7 +1,22 @@
 import { setNeighborMask, getNeighborMask } from "./form.js";
 import { decode_field, encode_field } from "../pkg/game_of_life.js";
 
-export function updateUrlParams() {
+let wasmIsReady = false;
+let wasmReadyResolvers = [];
+
+export function setWasmReady() {
+    wasmIsReady = true;
+    wasmReadyResolvers.forEach(fn => fn());
+    wasmReadyResolvers = [];
+}
+
+async function waitForWasm() {
+    if (wasmIsReady) return;
+    await new Promise(resolve => wasmReadyResolvers.push(resolve));
+}
+
+export async function updateUrlParams() {
+    await waitForWasm();
     const width = document.getElementById("widthInput").value;
     const height = document.getElementById("heightInput").value;
     const rule = document.getElementById("ruleInput").value;
@@ -20,7 +35,8 @@ export function updateUrlParams() {
     history.replaceState(null, "", newUrl);
 }
 
-export function loadFromUrlParams() {
+export async function loadFromUrlParams() {
+    await waitForWasm();
     const params = new URLSearchParams(window.location.search);
 
     const width = params.get("w");

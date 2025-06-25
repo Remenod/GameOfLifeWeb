@@ -19,9 +19,9 @@ function copyUrl() {
         });
 }
 
-export function setNeighborMask() {
+export function setNeighborMask(mask) {
     cells.forEach((cell, index) => {
-        cell.style.background = defMask[index] == 1 ? "black" : "white";
+        cell.style.background = mask[index] == 1 ? "black" : "white";
     });
 }
 
@@ -157,7 +157,7 @@ document.getElementById("heightInput").addEventListener("input", change);
 document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
 
 document.getElementById("copyUrl").addEventListener("click", copyUrl);
-document.getElementById("resetNeighborMask").addEventListener("click", setNeighborMask);
+document.getElementById("resetNeighborMask").addEventListener("click", () => { setNeighborMask(defMask); updateUrlParams() });
 
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
     e.preventDefault();
