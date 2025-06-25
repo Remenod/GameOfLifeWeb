@@ -4,7 +4,7 @@ import { playing, togglePlay, runGame } from "./game.js";
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm';
 
 const cells = document.querySelectorAll("#neighborMaskSelector > div");
-const blackIndices = [6, 7, 8, 11, 13, 16, 17, 18];
+const defMask = "0000001110010100111000000";
 
 function copyUrl() {
     const url = window.location.href;
@@ -19,10 +19,20 @@ function copyUrl() {
         });
 }
 
-function resetNeighborMask() {
+export function setNeighborMask(mask) {
     cells.forEach((cell, index) => {
-        cell.style.background = blackIndices.includes(index) ? "black" : "white";
+        cell.style.background = mask[index] == 1 ? "black" : "white";
     });
+}
+
+export function getNeighborMask() {
+    const mask = new Uint8Array(cells.length);
+
+    cells.forEach((cell, i) => {
+        const color = getComputedStyle(cell).backgroundColor;
+        mask[i] = (color === "rgb(0, 0, 0)") ? 1 : 0;
+    });
+    return mask;
 }
 
 const helpContent = await loadHelpContent();
@@ -147,7 +157,7 @@ document.getElementById("heightInput").addEventListener("input", change);
 document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
 
 document.getElementById("copyUrl").addEventListener("click", copyUrl);
-document.getElementById("resetNeighborMask").addEventListener("click", resetNeighborMask);
+document.getElementById("resetNeighborMask").addEventListener("click", () => { setNeighborMask(defMask); updateUrlParams() });
 
 document.getElementById("settingsForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -161,12 +171,7 @@ document.getElementById("settingsForm").addEventListener("submit", async (e) => 
     const ruleInput = document.getElementById("ruleInput").value;
     const fieldInput = document.getElementById("fieldInput").value;
 
-    const mask = new Uint8Array(cells.length);
-
-    cells.forEach((cell, i) => {
-        const color = getComputedStyle(cell).backgroundColor;
-        mask[i] = (color === "rgb(0, 0, 0)") ? 1 : 0;
-    });
+    const mask = getNeighborMask();
 
     await runGame(widthInput, heightInput, ruleInput, fieldInput, mask);
 });
@@ -187,5 +192,6 @@ cells.forEach(cell => {
     cell.addEventListener("click", () => {
         const color = getComputedStyle(cell).backgroundColor;
         cell.style.backgroundColor = (color === "rgb(0, 0, 0)") ? "white" : "black";
+        updateUrlParams();
     });
 });
