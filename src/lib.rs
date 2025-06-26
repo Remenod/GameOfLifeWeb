@@ -53,7 +53,7 @@ impl WasmGame {
         self.inner.get_cell(x, y)
     }
 
-    pub fn set_cell(&mut self, x: usize, y: usize, value: u8) {
+    pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
         self.inner.set_cell(x, y, value);
     }
 

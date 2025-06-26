@@ -15,7 +15,7 @@ pub trait Game {
 
     fn get_cell(&self, x: usize, y: usize) -> bool;
 
-    fn set_cell(&mut self, x: usize, y: usize, value: u8);
+    fn set_cell(&mut self, x: usize, y: usize, value: bool);
 
     fn export_field(&self) -> String;
 

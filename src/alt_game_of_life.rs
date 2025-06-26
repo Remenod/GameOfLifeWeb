@@ -106,13 +106,13 @@ impl Game for AltGameOfLife {
         };
     }
 
-    fn set_cell(&mut self, x: usize, y: usize, value: u8) {
+    fn set_cell(&mut self, x: usize, y: usize, value: bool) {
         let index = get_index(self.width, x, y);
 
         if index >= self.total_cells {
             return;
         }
-        if value != 0 {
+        if value {
             self.current_field.insert(index);
         } else {
             self.current_field.remove(&index);
