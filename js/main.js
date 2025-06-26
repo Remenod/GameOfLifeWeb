@@ -3,11 +3,11 @@ import "./form.js";
 import { initToggledCellsCollection, drawPreviewCanvas } from "./canvas.js";
 import { enforceDisabledControls, loadFromUrlParams, setWasmReady } from "./utils.js";
 
-loadFromUrlParams();
 enforceDisabledControls();
 
 await init().then(() => {
     setWasmReady()
+    loadFromUrlParams();
     drawPreviewCanvas();
     initToggledCellsCollection();
 });

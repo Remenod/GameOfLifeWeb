@@ -35,8 +35,7 @@ export async function updateUrlParams() {
     history.replaceState(null, "", newUrl);
 }
 
-export async function loadFromUrlParams() {
-    await waitForWasm();
+export function loadFromUrlParams() {
     const params = new URLSearchParams(window.location.search);
 
     const width = params.get("w");
