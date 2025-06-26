@@ -5,9 +5,14 @@ import { WasmGame, parse_field, encode_field } from "../pkg/game_of_life.js";
 export let game;
 export let playing = false;
 let width, height;
-let autoTickInterval = null;
+let tickCount = 0;
+let lastTickTime = 0;
+let loopAbort = false;
+let tickStartTime = performance.now();
 
 const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
+const ruleInputEl = document.getElementById('ruleInput');
+const tpsDisplayEl = document.getElementById("tpsDisplay");
 
 export async function runGame(widthInput, heightInput, ruleInput, fieldInput, neighboursRuleInput = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1]) {
 
@@ -17,7 +22,6 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
 
     if (!ruleRegex.test(rule)) {
         showToast("The rule isn't correct");
-        const ruleInputEl = document.getElementById('ruleInput');
         ruleInputEl.classList.remove('flash-red');
         void ruleInputEl.offsetWidth;
         ruleInputEl.classList.add('flash-red');
@@ -27,26 +31,57 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
     game = new WasmGame(width, height, parse_field(fieldInput, width), rule, neighboursRuleInput, document.getElementById("alt-switch").checked);
     drawCanvas();
     addCanvasListeners();
+    tpsDisplayEl.style.opacity = 100;
+    logTPS();
 
     document.querySelectorAll('.controls.card button, .controls.card input')
         .forEach(el => el.disabled = false);
+}
+
+function logTPS() {
+    const now = performance.now();
+    const elapsed = now - tickStartTime;
+
+    const tps = (elapsed > 0) ? tickCount / (elapsed / 1000) : tickCount;
+    tpsDisplayEl.textContent = `TPS: ${isFinite(tps) ? tps.toFixed(1) : "?"}`;
+
+    tickCount = 0;
+    tickStartTime = now;
+
+    setTimeout(logTPS, 1000);
 }
 
 export function togglePlay(disableTickBtn = true) {
     const btn = document.getElementById("playPauseBtn");
 
     if (!playing) {
-        const tps = parseInt(document.getElementById("tps").value, 10) ?? 0;
+        const tps = parseInt(document.getElementById("tps").value, 10);
         if (isNaN(tps) || tps < 0) {
             return;
         }
 
-        autoTickInterval = setInterval(tick, (1000 / tps) ?? 0);
+        const tickInterval = (1000 / tps) ?? 100000000;
+        lastTickTime = performance.now();
+        loopAbort = false;
+
+        function loop() {
+            if (loopAbort) return;
+
+            const now = performance.now();
+            while (now - lastTickTime >= tickInterval) {
+                tick();
+                lastTickTime += tickInterval;
+            }
+
+            setTimeout(loop, 0);
+        }
+
+        loop();
 
         btn.textContent = "Pause";
         playing = true;
     } else {
-        clearInterval(autoTickInterval);
+        loopAbort = true;
         btn.textContent = "Play";
         playing = false;
     }
@@ -69,6 +104,7 @@ function clearGrid() {
 function tick() {
     game.tick();
     drawCanvas();
+    tickCount++;
 }
 
 function copyField(version, encoder = null) {
