@@ -5,8 +5,10 @@ import { WasmGame, parse_field, encode_field } from "../pkg/game_of_life.js";
 export let game;
 export let playing = false;
 let width, height;
+let tickCount = 0;
 let lastTickTime = 0;
 let loopAbort = false;
+let tickStartTime = performance.now();
 
 const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
 
@@ -28,9 +30,23 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
     game = new WasmGame(width, height, parse_field(fieldInput, width), rule, neighboursRuleInput, document.getElementById("alt-switch").checked);
     drawCanvas();
     addCanvasListeners();
+    logTPS();
 
     document.querySelectorAll('.controls.card button, .controls.card input')
         .forEach(el => el.disabled = false);
+}
+
+function logTPS() {
+    const now = performance.now();
+    const elapsed = now - tickStartTime;
+
+    const tps = tickCount / (elapsed / 1000);
+    console.log(`TPS: ${tps.toFixed(1)}`);
+
+    tickCount = 0;
+    tickStartTime = now;
+
+    setTimeout(logTPS, 1000);
 }
 
 export function togglePlay(disableTickBtn = true) {
@@ -86,6 +102,7 @@ function clearGrid() {
 function tick() {
     game.tick();
     drawCanvas();
+    tickCount++;
 }
 
 function copyField(version, encoder = null) {
