@@ -5,7 +5,8 @@ import { WasmGame, parse_field, encode_field } from "../pkg/game_of_life.js";
 export let game;
 export let playing = false;
 let width, height;
-let autoTickInterval = null;
+let lastTickTime = 0;
+let loopAbort = false;
 
 const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
 
@@ -36,17 +37,33 @@ export function togglePlay(disableTickBtn = true) {
     const btn = document.getElementById("playPauseBtn");
 
     if (!playing) {
-        const tps = parseInt(document.getElementById("tps").value, 10) ?? 0;
+        const tps = parseInt(document.getElementById("tps").value, 10);
         if (isNaN(tps) || tps < 0) {
             return;
         }
 
-        autoTickInterval = setInterval(tick, (1000 / tps) ?? 0);
+        const tickInterval = (1000 / tps) ?? 100000000;
+        lastTickTime = performance.now();
+        loopAbort = false;
+
+        function loop() {
+            if (loopAbort) return;
+
+            const now = performance.now();
+            while (now - lastTickTime >= tickInterval) {
+                tick();
+                lastTickTime += tickInterval;
+            }
+
+            setTimeout(loop, 0);
+        }
+
+        loop();
 
         btn.textContent = "Pause";
         playing = true;
     } else {
-        clearInterval(autoTickInterval);
+        loopAbort = true;
         btn.textContent = "Play";
         playing = false;
     }
