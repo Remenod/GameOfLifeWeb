@@ -1,41 +1,49 @@
 import { BoundedSetQueue, parse_field } from "../pkg/game_of_life.js";
 import { game } from "./game.js";
 
-const canvas = document.getElementById("canvas");;
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+const ctx = canvas.getContext("2d")!;
 const cellSize = 10;
 
-const previewCanvas = document.getElementById("previewCanvas");
-const previewCtx = previewCanvas.getContext("2d");
+const previewCanvas = document.getElementById("previewCanvas") as HTMLCanvasElement;
+const previewCtx = previewCanvas.getContext("2d")!;
 const previewCellSize = 5;
 
 const lineWidth = 1;
 
 let isDragging = false;
-let toggledCells;
+let toggledCells: BoundedSetQueue;
 export async function initToggledCellsCollection() {
     toggledCells = new BoundedSetQueue(20);
 }
 
 export function drawCanvas() {
-    const width = game.get_width();
-    const height = game.get_height();
+    const width: number = game.get_width();
+    const height: number = game.get_height();
 
-    drawGenericCanvas(canvas, ctx, cellSize, width, height, 25, (x, y) => game.get_cell(x, y));
+    drawGenericCanvas(canvas, ctx, cellSize, width, height, 25, (x: number, y: number) => game.get_cell(x, y));
 }
 
 export function drawPreviewCanvas() {
-    const width = parseInt(document.getElementById("widthInput").value, 10);
-    const height = parseInt(document.getElementById("heightInput").value, 10);
-    const fld = parse_field(document.getElementById("fieldInput").value.trim(), width);
+    const width = parseInt((document.getElementById("widthInput") as HTMLInputElement).value, 10);
+    const height = parseInt((document.getElementById("heightInput") as HTMLInputElement).value, 10);
+    const fld = parse_field((document.getElementById("fieldInput") as HTMLInputElement).value.trim(), width);
 
-    drawGenericCanvas(previewCanvas, previewCtx, previewCellSize, width, height, 10, (x, y) => {
+    drawGenericCanvas(previewCanvas, previewCtx, previewCellSize, width, height, 10, (x: number, y: number) => {
         const idx = y * width + x;
         return idx < fld.length ? fld[idx] === 1 : false;
     });
 }
 
-function drawGenericCanvas(canv, canvCtx, cellSize, width, height, pixelatedThreshold, getData) {
+function drawGenericCanvas(
+    canv: HTMLCanvasElement,
+    canvCtx: CanvasRenderingContext2D,
+    cellSize: number,
+    width: number,
+    height: number,
+    pixelatedThreshold: number,
+    getData: (x: number, y: number) => boolean) {
+
     updateImageRendering(canv, pixelatedThreshold, width, height);
 
     canv.width = width * cellSize + lineWidth;
@@ -67,7 +75,7 @@ function drawGenericCanvas(canv, canvCtx, cellSize, width, height, pixelatedThre
     }
 }
 
-function updateImageRendering(canv = canvas, pixelatedThreshold, width, height) {
+function updateImageRendering(canv = canvas, pixelatedThreshold: number, width: number, height: number) {
     const cellWidthPx = canv.clientWidth / width;
     const cellHeightPx = canv.clientHeight / height;
 
@@ -78,19 +86,17 @@ function updateImageRendering(canv = canvas, pixelatedThreshold, width, height) 
     }
 }
 
-function getCanvasCoords(event) {
+function getCanvasCoords(event: MouseEvent | TouchEvent): { x: number; y: number } {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
 
-    let clientX, clientY;
+    let clientX: number, clientY: number;
 
-    if (event.touches) {
-        // TouchEvent
+    if ("touches" in event) {
         clientX = event.touches[0].clientX;
         clientY = event.touches[0].clientY;
     } else {
-        // MouseEvent
         clientX = event.clientX;
         clientY = event.clientY;
     }
@@ -100,7 +106,7 @@ function getCanvasCoords(event) {
     return { x, y };
 }
 
-function toggleCellAtEvent(event) {
+function toggleCellAtEvent(event: MouseEvent | TouchEvent) {
     const { x, y } = getCanvasCoords(event);
 
     const key = `${x},${y}`;

@@ -1,10 +1,16 @@
 import { drawPreviewCanvas } from "./canvas.js";
 import { updateUrlParams, showToast, resetElementValue } from "./utils.js";
 import { playing, togglePlay, runGame } from "./game.js";
+// @ts-ignore
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/+esm';
 
-const cells = document.querySelectorAll("#neighborMaskSelector > div");
+const cells = document.querySelectorAll("#neighborMaskSelector > div") as NodeListOf<HTMLElement>;
 export const defMask = "0000001110010100111000000";
+
+type HelpEntry = {
+    type: string;
+    html: string;
+};
 
 function copyUrl() {
     const url = window.location.href;
@@ -19,9 +25,9 @@ function copyUrl() {
         });
 }
 
-export function setNeighborMask(mask) {
+export function setNeighborMask(mask: string) {
     cells.forEach((cell, index) => {
-        cell.style.background = mask[index] == 1 ? "black" : "white";
+        cell.style.background = mask[index] == '1' ? "black" : "white";
     });
 }
 
@@ -37,14 +43,15 @@ export function getNeighborMask() {
 
 const helpContent = await loadHelpContent();
 
-const modalCloseHandler = (e) => {
-    if (!document.querySelector(".modal-content")?.contains(e.target)) {
+const modalCloseHandler = (e: MouseEvent) => {
+    const modal = document.querySelector(".modal-content");
+    if (modal && (!modal.contains(e.target as Node))) {
         closeHelp();
         document.removeEventListener("click", modalCloseHandler);
     }
 };
 
-function openHelp(key, trigger) {
+function openHelp(key: string, trigger: HTMLElement) {
     const data = helpContent[key];
     if (!data) return;
     closeHelp();
@@ -59,9 +66,12 @@ function openHelp(key, trigger) {
         tooltip.style.left = `${rect.left + window.scrollX}px`;
         tooltip.style.top = `${rect.bottom + 6 + window.scrollY}px`;
 
+        // @ts-expect-error
         trigger._tooltip = tooltip;
 
-        setTimeout(() => { document.addEventListener("click", closeHelp); }, 0);
+        setTimeout(() => {
+            document.addEventListener("click", closeHelp);
+        }, 0);
     }
 
     if (data.type === "modal") {
@@ -71,14 +81,22 @@ function openHelp(key, trigger) {
             <div class="modal-content">
                 <button class="close-btn" id="close-modal">×</button>
                 <div id="helpContentContainer" class="markdown-content">
-                ${data.html}
+                    ${data.html}
                 </div>
             </div>`;
-        document.body.appendChild(overlay);
-        document.getElementById("close-modal").addEventListener("click", closeHelp);
-        document.body.style.overflow = 'hidden';
 
-        setTimeout(() => { document.addEventListener("click", modalCloseHandler); }, 0);
+        document.body.appendChild(overlay);
+
+        const closeBtn = document.getElementById("close-modal");
+        if (closeBtn) {
+            closeBtn.addEventListener("click", closeHelp);
+        }
+
+        document.body.style.overflow = "hidden";
+
+        setTimeout(() => {
+            document.addEventListener("click", modalCloseHandler);
+        }, 0);
     }
 }
 
@@ -91,7 +109,7 @@ function closeHelp() {
 }
 
 async function loadHelpContent() {
-    const helpContent = {};
+    const helpContent: Record<string, HelpEntry> = {};
     const response = await fetch(`help/index.json`); // ?nocache=${Date.now()}
     const keys = await response.json();
 
@@ -103,7 +121,7 @@ async function loadHelpContent() {
     return helpContent;
 }
 
-function parseMarkdownHelp(md) {
+function parseMarkdownHelp(md: string) {
     const lines = md.trim().split('\n');
     let type = 'modal'; // default
     let contentStart = 0;
@@ -117,12 +135,12 @@ function parseMarkdownHelp(md) {
     }
 
     const markdownBody = lines.slice(contentStart).join('\n');
-    const html = marked.parse(markdownBody);
+    const html = marked.parse(markdownBody) as string;
 
     return { type, html };
 }
 
-document.getElementById("pasteBtn").addEventListener("click", async () => {
+(document.getElementById("pasteBtn") as HTMLElement).addEventListener("click", async () => {
     try {
         const rawText = await navigator.clipboard.readText();
         const text = rawText.trim();
@@ -136,7 +154,7 @@ document.getElementById("pasteBtn").addEventListener("click", async () => {
             return;
         }
 
-        const el = document.getElementById('fieldInput');
+        const el = document.getElementById('fieldInput') as HTMLInputElement;
         if (el) {
             el.value = text;
 
@@ -151,40 +169,40 @@ document.getElementById("pasteBtn").addEventListener("click", async () => {
 
 const change = () => { drawPreviewCanvas(), updateUrlParams() };
 
-document.getElementById("fieldInput").addEventListener("input", change);
-document.getElementById("widthInput").addEventListener("input", change);
-document.getElementById("heightInput").addEventListener("input", change);
-document.getElementById("ruleInput").addEventListener("input", updateUrlParams);
+(document.getElementById("fieldInput") as HTMLElement).addEventListener("input", change);
+(document.getElementById("widthInput") as HTMLElement).addEventListener("input", change);
+(document.getElementById("heightInput") as HTMLElement).addEventListener("input", change);
+(document.getElementById("ruleInput") as HTMLElement).addEventListener("input", updateUrlParams);
 
-document.getElementById("copyUrl").addEventListener("click", copyUrl);
-document.getElementById("resetNeighborMask").addEventListener("click", () => { setNeighborMask(defMask); updateUrlParams() });
+(document.getElementById("copyUrl") as HTMLElement).addEventListener("click", copyUrl);
+(document.getElementById("resetNeighborMask") as HTMLElement).addEventListener("click", () => { setNeighborMask(defMask); updateUrlParams() });
 
-document.getElementById("settingsForm").addEventListener("submit", async (e) => {
+(document.getElementById("settingsForm") as HTMLElement).addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (playing) {
         togglePlay();
     }
 
-    const widthInput = document.getElementById("widthInput").value;
-    const heightInput = document.getElementById("heightInput").value;
-    const ruleInput = document.getElementById("ruleInput").value;
-    const fieldInput = document.getElementById("fieldInput").value;
+    const widthInput = parseInt((document.getElementById("widthInput") as HTMLInputElement).value);
+    const heightInput = parseInt((document.getElementById("heightInput") as HTMLInputElement).value);
+    const ruleInput = (document.getElementById("ruleInput") as HTMLInputElement).value;
+    const fieldInput = (document.getElementById("fieldInput") as HTMLInputElement).value;
 
     const mask = getNeighborMask();
 
     await runGame(widthInput, heightInput, ruleInput, fieldInput, mask);
 });
 
-document.querySelectorAll(".info-small").forEach(btn => {
+(document.querySelectorAll(".info-small") as NodeListOf<HTMLElement>).forEach(btn => {
     btn.addEventListener("click", () => {
-        openHelp(btn.dataset.type, btn);
+        openHelp(btn.dataset.type ?? "", btn);
     });
 });
 
-document.querySelectorAll(".resetBtn").forEach(btn => {
+(document.querySelectorAll(".resetBtn") as NodeListOf<HTMLElement>).forEach(btn => {
     btn.addEventListener("click", () => {
-        resetElementValue(btn.dataset.element, btn.dataset.default);
+        resetElementValue(btn.dataset.element ?? "", btn.dataset.default);
     });
 });
 

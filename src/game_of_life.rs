@@ -66,14 +66,14 @@ impl Game for GameOfLife {
         };
     }
 
-    fn set_cell(&mut self, x: usize, y: usize, value: u8) {
+    fn set_cell(&mut self, x: usize, y: usize, value: bool) {
         let index = get_index(self.width, x, y);
 
         if index >= self.total_cells {
             return;
         }
 
-        self.current_field[index] = value;
+        self.current_field[index] = value as u8;
     }
 
     fn export_field(&self) -> String {
