@@ -12,6 +12,7 @@ let tickStartTime = performance.now();
 
 const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
 const ruleInputEl = document.getElementById('ruleInput');
+const tpsDisplayEl = document.getElementById("tpsDisplay");
 
 export async function runGame(widthInput, heightInput, ruleInput, fieldInput, neighboursRuleInput = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1]) {
 
@@ -30,6 +31,7 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
     game = new WasmGame(width, height, parse_field(fieldInput, width), rule, neighboursRuleInput, document.getElementById("alt-switch").checked);
     drawCanvas();
     addCanvasListeners();
+    tpsDisplayEl.style.opacity = 100;
     logTPS();
 
     document.querySelectorAll('.controls.card button, .controls.card input')
@@ -40,8 +42,8 @@ function logTPS() {
     const now = performance.now();
     const elapsed = now - tickStartTime;
 
-    const tps = tickCount / (elapsed / 1000);
-    console.log(`TPS: ${tps.toFixed(1)}`);
+    const tps = (elapsed > 0) ? tickCount / (elapsed / 1000) : tickCount;
+    tpsDisplayEl.textContent = `TPS: ${isFinite(tps) ? tps.toFixed(1) : "?"}`;
 
     tickCount = 0;
     tickStartTime = now;
