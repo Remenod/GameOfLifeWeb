@@ -16,7 +16,7 @@ export class WasmGame {
   constructor(width: number, height: number, field: Uint8Array, rule: string, check_rule: Uint8Array, alt: boolean);
   tick(): void;
   get_cell(x: number, y: number): boolean;
-  set_cell(x: number, y: number, value: number): void;
+  set_cell(x: number, y: number, value: boolean): void;
   export_field(): string;
   get_height(): number;
   get_width(): number;
