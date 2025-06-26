@@ -11,6 +11,7 @@ let loopAbort = false;
 let tickStartTime = performance.now();
 
 const ruleRegex = /^B[0-8]*\/S[0-8]*$/;
+const ruleInputEl = document.getElementById('ruleInput');
 
 export async function runGame(widthInput, heightInput, ruleInput, fieldInput, neighboursRuleInput = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1]) {
 
@@ -20,7 +21,6 @@ export async function runGame(widthInput, heightInput, ruleInput, fieldInput, ne
 
     if (!ruleRegex.test(rule)) {
         showToast("The rule isn't correct");
-        const ruleInputEl = document.getElementById('ruleInput');
         ruleInputEl.classList.remove('flash-red');
         void ruleInputEl.offsetWidth;
         ruleInputEl.classList.add('flash-red');
