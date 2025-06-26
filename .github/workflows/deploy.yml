@@ -13,17 +13,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      
-      - name: Install TypeScript
-        run: npm install --save-dev typescript
-      
-      - name: Compile TypeScript
-        run: npx tsc
-      
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -37,6 +26,17 @@ jobs:
       - name: Build WASM
         run: wasm-pack build --target web --out-dir pkg --release
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install TypeScript
+        run: npm install --save-dev typescript
+      
+      - name: Compile TypeScript
+        run: npx tsc
+      
       - name: Prepare dist folder
         run: |
           rm -fr dist
