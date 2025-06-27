@@ -139,7 +139,7 @@ function copyField(version: string, encoder: ((input: string) => string) | null 
 (document.getElementById("v2copyBtn") as HTMLButtonElement).addEventListener("click", () => copyField("v2", f => encode_field(f, false)));
 (document.getElementById("v3copyBtn") as HTMLButtonElement).addEventListener("click", () => copyField("v3", f => encode_field(f, true)));
 
-tickBtnEl.addEventListener("click", tick);
+tickBtnEl.addEventListener("click", () => { tick(); requestAnimationFrame(drawCanvas) });
 playPauseBtnEl.addEventListener("click", () => togglePlay());
 (document.getElementById("clearBtn") as HTMLButtonElement).addEventListener("click", clearGrid);
 
