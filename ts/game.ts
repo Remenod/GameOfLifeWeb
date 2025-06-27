@@ -58,27 +58,14 @@ function logTPS() {
 export function togglePlay(disableTickBtn = true) {
     if (!playing) {
         const tps = parseInt(tpsInput.value, 10);
-        if (isNaN(tps) || tps < 0) {
-            return;
-        }
+        if (isNaN(tps) || tps <= 0) return;
 
         const tickInterval = 1000 / tps;
         lastTickTime = performance.now();
         loopAbort = false;
 
-        function loop() {
-            if (loopAbort) return;
-
-            const now = performance.now();
-            while (now - lastTickTime >= tickInterval) {
-                tick();
-                lastTickTime += tickInterval;
-            }
-
-            setTimeout(loop, 0);
-        }
-
-        loop();
+        startTickLoop(tickInterval);
+        startRenderLoop();
 
         playPauseBtnEl.textContent = "Pause";
         playing = true;
@@ -87,8 +74,41 @@ export function togglePlay(disableTickBtn = true) {
         playPauseBtnEl.textContent = "Play";
         playing = false;
     }
-    if (disableTickBtn)
+
+    if (disableTickBtn) {
         tickBtnEl.disabled = playing;
+    }
+}
+
+function startTickLoop(tickInterval: number) {
+    function tickLoop() {
+        if (loopAbort) return;
+
+        const now = performance.now();
+        while (now - lastTickTime >= tickInterval) {
+            tick();
+            lastTickTime += tickInterval;
+        }
+
+        setTimeout(tickLoop, 0);
+    }
+
+    tickLoop();
+}
+
+function startRenderLoop() {
+    function renderLoop() {
+        if (loopAbort) return;
+        drawCanvas();
+        requestAnimationFrame(renderLoop);
+    }
+
+    requestAnimationFrame(renderLoop);
+}
+
+function tick() {
+    game.tick();
+    tickCount++;
 }
 
 function clearGrid() {
@@ -101,12 +121,6 @@ function clearGrid() {
         }
     }
     drawCanvas();
-}
-
-function tick() {
-    game.tick();
-    drawCanvas();
-    tickCount++;
 }
 
 function copyField(version: string, encoder: ((input: string) => string) | null = null) {
