@@ -91,4 +91,8 @@ impl Game for GameOfLife {
     fn get_width(&self) -> usize {
         self.width
     }
+
+    fn export_array(&self) -> Vec<u8> {
+        self.current_field.clone()
+    }
 }

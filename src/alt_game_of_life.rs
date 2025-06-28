@@ -138,4 +138,10 @@ impl Game for AltGameOfLife {
     fn get_width(&self) -> usize {
         self.width
     }
+
+    fn export_array(&self) -> Vec<u8> {
+        (0..self.total_cells)
+            .map(|i| self.current_field.contains(&i) as u8)
+            .collect()
+    }
 }
