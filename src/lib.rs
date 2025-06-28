@@ -68,6 +68,10 @@ impl WasmGame {
     pub fn get_width(&self) -> usize {
         self.inner.get_width()
     }
+
+    pub fn export_pixels(&self) -> Vec<u8> {
+        self.inner.export_pixels()
+    }
 }
 
 fn to_radix62(mut num: u32) -> String {
