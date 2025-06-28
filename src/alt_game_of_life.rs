@@ -139,9 +139,9 @@ impl Game for AltGameOfLife {
         self.width
     }
 
-    fn export_array(&self) -> Vec<u8> {
+    fn export_pixels(&self) -> Vec<u8> {
         (0..self.total_cells)
-            .map(|i| self.current_field.contains(&i) as u8)
+            .map(|i| (self.current_field.contains(&i) as u8) * 255)
             .collect()
     }
 }

@@ -69,8 +69,8 @@ impl WasmGame {
         self.inner.get_width()
     }
 
-    pub fn export_array(&self) -> Vec<u8> {
-        self.inner.export_array()
+    pub fn export_pixels(&self) -> Vec<u8> {
+        self.inner.export_pixels()
     }
 }
 

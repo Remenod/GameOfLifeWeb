@@ -92,7 +92,7 @@ impl Game for GameOfLife {
         self.width
     }
 
-    fn export_array(&self) -> Vec<u8> {
-        self.current_field.clone()
+    fn export_pixels(&self) -> Vec<u8> {
+        self.current_field.iter().map(|x| x * 255).collect()
     }
 }

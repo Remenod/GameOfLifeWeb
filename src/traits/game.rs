@@ -24,7 +24,7 @@ pub trait Game {
 
     fn get_width(&self) -> usize;
 
-    fn export_array(&self) -> Vec<u8>;
+    fn export_pixels(&self) -> Vec<u8>;
 
     // fn export_changes(&self) -> HashSet<u8>;
 }
