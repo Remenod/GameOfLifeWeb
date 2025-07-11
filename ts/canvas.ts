@@ -58,7 +58,7 @@ function initWebGLProgram(gl: WebGLRenderingContext) {
 
         void main() {
             vec2 cellCoord = vec2(v_texCoord.x, 1.0 - v_texCoord.y) * u_resolution;
-            float cell = texture2D(u_field, floor(cellCoord) / u_resolution).r;
+            float cell = texture2D(u_field, (floor(cellCoord) + 0.5) / u_resolution).r;
             float color = 1.0 - cell;
             gl_FragColor = vec4(vec3(color), 1.0);
         }`;
@@ -105,6 +105,9 @@ function renderWebGLField(
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, fieldWidth, fieldHeight, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, fieldData);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clearColor(1, 1, 1, 1);
