@@ -3,7 +3,6 @@ import { game } from "./game.js";
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("webgl")!;
-const cellSize = 10;
 
 const previewCanvas = document.getElementById("previewCanvas") as HTMLCanvasElement;
 const previewCtx = previewCanvas.getContext("webgl")!;
