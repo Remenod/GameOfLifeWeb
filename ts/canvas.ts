@@ -247,3 +247,41 @@ export function addCanvasListeners() {
         toggledCells.clear();
     });
 }
+
+(document.getElementById("zoomInBtn") as HTMLButtonElement).onclick = () => {
+    zoom /= 1.1;
+    drawCanvas();
+};
+
+let offsetScale = 0.01 * zoom;
+
+(document.getElementById("zoomOutBtn") as HTMLButtonElement).onclick = () => {
+    zoom *= 1.1;
+    drawCanvas();
+};
+
+(document.getElementById("moveLeftBtn") as HTMLButtonElement).onclick = () => {
+    offsetX -= offsetScale;
+    drawCanvas();
+};
+
+(document.getElementById("moveRightBtn") as HTMLButtonElement).onclick = () => {
+    offsetX += offsetScale;
+    drawCanvas();
+};
+
+(document.getElementById("moveUpBtn") as HTMLButtonElement).onclick = () => {
+    offsetY += offsetScale;
+    drawCanvas();
+};
+
+(document.getElementById("moveDownBtn") as HTMLButtonElement).onclick = () => {
+    offsetY -= offsetScale;
+    drawCanvas();
+};
+(document.getElementById("resetZoomBtn") as HTMLButtonElement).onclick = () => {
+    offsetY = 0;
+    offsetX = 0;
+    zoom = 1;
+    drawCanvas();
+};
