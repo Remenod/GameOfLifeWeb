@@ -253,7 +253,7 @@ export function addCanvasListeners() {
     drawCanvas();
 };
 
-let offsetScale = 0.01 * zoom;
+const offsetScale = 0.01 * zoom;
 
 (document.getElementById("zoomOutBtn") as HTMLButtonElement).onclick = () => {
     zoom *= 1.1;
