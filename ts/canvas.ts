@@ -147,17 +147,6 @@ function createProgram(gl: WebGLRenderingContext, vShader: WebGLShader, fShader:
     return program;
 }
 
-function updateImageRendering(canv = canvas, pixelatedThreshold: number, width: number, height: number) {
-    const cellWidthPx = canv.clientWidth / width;
-    const cellHeightPx = canv.clientHeight / height;
-
-    if (cellWidthPx >= pixelatedThreshold || cellHeightPx >= pixelatedThreshold) {
-        canv.style.imageRendering = 'pixelated';
-    } else {
-        canv.style.imageRendering = 'auto';
-    }
-}
-
 function getCanvasCoords(
     event: MouseEvent | TouchEvent,
     zoom: number = 1,
