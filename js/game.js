@@ -46,23 +46,13 @@ function logTPS() {
 export function togglePlay(disableTickBtn = true) {
     if (!playing) {
         const tps = parseInt(tpsInput.value, 10);
-        if (isNaN(tps) || tps < 0) {
+        if (isNaN(tps) || tps <= 0)
             return;
-        }
         const tickInterval = 1000 / tps;
         lastTickTime = performance.now();
         loopAbort = false;
-        function loop() {
-            if (loopAbort)
-                return;
-            const now = performance.now();
-            while (now - lastTickTime >= tickInterval) {
-                tick();
-                lastTickTime += tickInterval;
-            }
-            setTimeout(loop, 0);
-        }
-        loop();
+        startTickLoop(tickInterval);
+        startRenderLoop();
         playPauseBtnEl.textContent = "Pause";
         playing = true;
     }
@@ -71,8 +61,35 @@ export function togglePlay(disableTickBtn = true) {
         playPauseBtnEl.textContent = "Play";
         playing = false;
     }
-    if (disableTickBtn)
+    if (disableTickBtn) {
         tickBtnEl.disabled = playing;
+    }
+}
+function startTickLoop(tickInterval) {
+    function tickLoop() {
+        if (loopAbort)
+            return;
+        const now = performance.now();
+        while (now - lastTickTime >= tickInterval) {
+            tick();
+            lastTickTime += tickInterval;
+        }
+        setTimeout(tickLoop, 0);
+    }
+    tickLoop();
+}
+function startRenderLoop() {
+    function renderLoop() {
+        if (loopAbort)
+            return;
+        drawCanvas();
+        requestAnimationFrame(renderLoop);
+    }
+    requestAnimationFrame(renderLoop);
+}
+function tick() {
+    game.tick();
+    tickCount++;
 }
 function clearGrid() {
     if (playing) {
@@ -84,11 +101,6 @@ function clearGrid() {
         }
     }
     drawCanvas();
-}
-function tick() {
-    game.tick();
-    drawCanvas();
-    tickCount++;
 }
 function copyField(version, encoder = null) {
     if (!game)
@@ -103,7 +115,7 @@ function copyField(version, encoder = null) {
 document.getElementById("v1copyBtn").addEventListener("click", () => copyField("v1"));
 document.getElementById("v2copyBtn").addEventListener("click", () => copyField("v2", f => encode_field(f, false)));
 document.getElementById("v3copyBtn").addEventListener("click", () => copyField("v3", f => encode_field(f, true)));
-tickBtnEl.addEventListener("click", tick);
+tickBtnEl.addEventListener("click", () => { tick(); requestAnimationFrame(drawCanvas); });
 playPauseBtnEl.addEventListener("click", () => togglePlay());
 document.getElementById("clearBtn").addEventListener("click", clearGrid);
 tpsInput.addEventListener("input", () => {

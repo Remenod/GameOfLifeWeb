@@ -9,6 +9,7 @@ export const wasmgame_set_cell: (a: number, b: number, c: number, d: number) => 
 export const wasmgame_export_field: (a: number) => [number, number];
 export const wasmgame_get_height: (a: number) => number;
 export const wasmgame_get_width: (a: number) => number;
+export const wasmgame_export_pixels: (a: number) => [number, number];
 export const encode_field: (a: number, b: number, c: number) => [number, number];
 export const decode_field: (a: number, b: number, c: number) => [number, number];
 export const adapt_field_width: (a: number, b: number, c: number, d: number) => [number, number];

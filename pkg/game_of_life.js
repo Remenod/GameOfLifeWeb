@@ -80,6 +80,11 @@ function passStringToWasm0(arg, malloc, realloc) {
     WASM_VECTOR_LEN = offset;
     return ptr;
 }
+
+function getArrayU8FromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
+}
 /**
  * @param {string} decoded
  * @param {boolean} v3mode
@@ -141,10 +146,6 @@ export function adapt_field_width(matrix_str, old_width, new_width) {
     }
 }
 
-function getArrayU8FromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
-}
 /**
  * @param {string} input
  * @param {number} current_width
@@ -293,6 +294,15 @@ export class WasmGame {
     get_width() {
         const ret = wasm.wasmgame_get_width(this.__wbg_ptr);
         return ret >>> 0;
+    }
+    /**
+     * @returns {Uint8Array}
+     */
+    export_pixels() {
+        const ret = wasm.wasmgame_export_pixels(this.__wbg_ptr);
+        var v1 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+        wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+        return v1;
     }
 }
 
