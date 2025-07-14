@@ -91,4 +91,8 @@ impl Game for GameOfLife {
     fn get_width(&self) -> usize {
         self.width
     }
+
+    fn export_pixels(&self) -> Vec<u8> {
+        self.current_field.iter().map(|x| x * 255).collect()
+    }
 }

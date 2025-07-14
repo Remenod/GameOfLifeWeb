@@ -60,3 +60,16 @@
     z-index: 1000;
     opacity: 0;
 }
+
+.zoom-controls {
+    margin-top: 10px;
+}
+
+.zoom-controls label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.button-group button {
+    margin: 2px;
+}

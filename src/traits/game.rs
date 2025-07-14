@@ -1,4 +1,5 @@
 use crate::game_rule::GameRule;
+// use std::collections::HashSet;
 
 pub trait Game {
     fn new(
@@ -22,4 +23,8 @@ pub trait Game {
     fn get_height(&self) -> usize;
 
     fn get_width(&self) -> usize;
+
+    fn export_pixels(&self) -> Vec<u8>;
+
+    // fn export_changes(&self) -> HashSet<u8>;
 }
