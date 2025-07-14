@@ -3,7 +3,6 @@ use crate::{
     traits::{field_acces::FieldAccess, game::Game},
     utils::{check_cell_next_turn::*, coord_converter::*},
 };
-use once_cell::sync::Lazy;
 use rustc_hash::{FxBuildHasher, FxHashSet};
 
 pub struct AltGameOfLife {
@@ -15,9 +14,8 @@ pub struct AltGameOfLife {
     empty_to_check: FxHashSet<usize>,
     game_rule: GameRule,
     offsets: Vec<(i8, i8)>,
+    rev_offsets: Vec<(i8, i8)>,
 }
-
-static FULL_OFFSETS: Lazy<Vec<(i8, i8)>> = Lazy::new(|| GameRule::get_offsets(&vec![1; 25]));
 
 impl Game for AltGameOfLife {
     fn new(
@@ -28,6 +26,10 @@ impl Game for AltGameOfLife {
         check_rule: &[u8],
     ) -> AltGameOfLife {
         let offsets = GameRule::get_offsets(check_rule);
+        let mut rev_rule = check_rule.to_vec();
+        rev_rule.reverse();
+        let rev_offsets = GameRule::get_offsets(&rev_rule);
+
         AltGameOfLife {
             width: width,
             height: height,
@@ -48,6 +50,7 @@ impl Game for AltGameOfLife {
                 .collect(),
             game_rule: game_rule,
             offsets: offsets,
+            rev_offsets: rev_offsets,
         }
     }
 
@@ -68,7 +71,7 @@ impl Game for AltGameOfLife {
             }
 
             let (x, y) = get_x_y(self.width, *cell);
-            for (dx, dy) in FULL_OFFSETS.iter() {
+            for (dx, dy) in self.rev_offsets.iter() {
                 let nx = x.wrapping_add_signed(*dx as isize);
                 let ny = y.wrapping_add_signed(*dy as isize);
 
